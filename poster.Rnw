@@ -8,12 +8,14 @@
 
 \documentclass[final]{beamer}
 \usepackage[scale=1.00]{beamerposter}
-\usepackage{graphicx}			% allows us to import images
+\usepackage{graphicx} % Importing images  
 \usepackage{tabularx} % Better tables
-\usepackage{float}
+\usepackage{float} % Floats, obviously
 \usepackage{booktabs} % Better tables
 \usepackage{amsmath} % Better tables
 \usepackage[neverdecrease]{paralist} % Control over list indentation
+\usepackage[english]{babel}
+\usepackage{blindtext}
 
 %-----------------------------------------------------------
 % Define the column width and poster size
@@ -32,8 +34,8 @@
 \setlength{\paperheight}{30in}
 \setlength{\sepwid}{0.026\paperwidth}
 \setlength{\minisepwid}{0.06\onecolwid}
-\setlength{\onecolwid}{0.225\paperwidth}
-\setlength{\twocolwid}{0.45\paperwidth}
+\setlength{\onecolwid}{0.22\paperwidth}
+\setlength{\twocolwid}{0.464\paperwidth}
 \setlength{\threecolwid}{0.675\paperwidth}
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
@@ -59,10 +61,10 @@
 % Define colours (see beamerthemeconfposter.sty to change these colour definitions)
 %-----------------------------------------------------------
 
-\setbeamercolor{block title}{fg=UTDOrange,bg=white}
+\setbeamercolor{block title}{fg=UMNMaroon,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
-\setbeamercolor{block alerted title}{fg=white,bg=UTDGreen!70}
-\setbeamercolor{block alerted body}{fg=black,bg=UTDGreen!10}
+\setbeamercolor{block alerted title}{fg=white,bg=UMNGold!70}
+\setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
 %-----------------------------------------------------------
 % Custom definitions
@@ -109,16 +111,22 @@ options(digits=2)
 
 \begin{frame}[t, fragile]
 	\begin{columns}[T] % Overall <Begin>
-		\begin{column}{\sepwid}\end{column}
-		\begin{column}{\onecolwid} % Questions and Methods <Begin>
-		\end{column} % Questions and Methods <End>
-		\begin{column}{\sepwid}\end{column}			% empty spacer column
-		\begin{column}{\twocolwid} 
-		\end{column} % Results <End>
-		\begin{column}{\sepwid} \end{column}
-		\begin{column}{\onecolwid} % Discussion and misc <Begin>
-		\end{column} % Discussion <End>
-		\begin{column}{\sepwid}\end{column}			% empty spacer column
+		\begin{column}{\sepwid}\end{column} % Spacer column
+		\begin{column}{\onecolwid} % Column 1 <Begin>
+				\begin{block}{Introduction}
+				\end{block}
+		\end{column} % Column 1 <End>
+		\begin{column}{\sepwid}\end{column} % Spacer column
+		\begin{column}{\twocolwid} % Column 2/3 <Begin>
+				\begin{block}{Results}
+				\end{block}
+		\end{column} % Column 2/3 <End>
+		\begin{column}{\sepwid} \end{column} % Spacer column
+		\begin{column}{\onecolwid} % Column 4 <Begin>
+				\begin{block}{Conclusions}
+				\end{block}
+		\end{column} % Column 4 <End>
+		\begin{column}{\sepwid}\end{column} % Spacer column
 	\end{columns} % Overall <End>
 \end{frame}
 \end{document}

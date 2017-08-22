@@ -116,8 +116,8 @@
 %--------------------------------------------------------
 % UTD COLORS 
 %--------------------------------------------------------
-\definecolor{UTDOrange}         {RGB}{199, 91, 18}
-\definecolor{UTDGreen}          {RGB}{0, 133, 66}
+\definecolor{UMNGold}           {RGB}{225, 204, 51}
+\definecolor{UMNMaroon}         {RGB}{122, 0, 25}
 \definecolor{solarorange}	    {RGB}{233, 131, 0}
 \definecolor{sparkorange}       {RGB}{255, 182, 18}
 \definecolor{seedlinggreen}     {RGB}{201, 221, 3}
@@ -145,12 +145,12 @@
 \setbeamercolor{structure}{fg=jblue}
 \setbeamercolor{titlelike}         {bg=jblue,fg=white}
 \setbeamercolor{frametitle}        {bg=jblue!10,fg=jblue}
-\setbeamercolor{cboxb}{fg=black,bg=UTDOrange}
+\setbeamercolor{cboxb}{fg=black,bg=UMNMaroon}
 \setbeamercolor{cboxr}{fg=black,bg=red}
 
 % set colors for itemize/enumerate
-\setbeamercolor{item}{fg=UTDOrange}
-\setbeamercolor{item projected}{fg=white,bg=UTDOrange}
+\setbeamercolor{item}{fg=UMNMaroon}
+\setbeamercolor{item projected}{fg=white,bg=UMNMaroon}
 
 % set colors for blocks
 \setbeamercolor{block title}{fg=ngreen,bg=white}
@@ -194,14 +194,13 @@
 \setbeamertemplate{headline}{
  \leavevmode
   \begin{columns}
-   \begin{column}{0.10\linewidth}
-   \end{column}
    \begin{column}{0.20\linewidth}
-   \includegraphics[scale=1.00]{utdlogo}
+   \centering
+   \hspace*{1.5in} \includegraphics[scale=0.20]{umnlogotemp}
    \end{column}
-   \begin{column}{0.70\linewidth}
+   \begin{column}{0.80\linewidth}
     \vskip1cm
-    \hspace{1em} \usebeamercolor{title in headline}{\color{UTDOrange}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
+    \hspace{1em} \usebeamercolor{title in headline}{\color{UMNMaroon}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
     \hspace{1em} \usebeamercolor{author in headline}{\color{warmgray8}\Large{\insertauthor}\\[1ex]}
     \hspace{1em} \usebeamercolor{institute in headline}{\color{warmgray8}\large{\insertinstitute}\\[1ex]}
     \vskip1cm
