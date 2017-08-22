@@ -1,0 +1,911 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Perception of voice gender in the speech of children
+% Daniel Guest 
+% December 2016
+% Modified by template from Nathaniel Johnston...
+%	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[final]{beamer}
+\usepackage[scale=1.05]{beamerposter}
+\usepackage{graphicx}			% allows us to import images
+\usepackage{tabularx} % Better tables
+\usepackage{float}
+\usepackage{booktabs} % Better tables
+\usepackage{amsmath} % Better tables
+\usepackage[neverdecrease]{paralist} % Control over list indentation
+
+%-----------------------------------------------------------
+% Define the column width and poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% The separation I chose is 0.024 and I want 4 columns
+% Then set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be 2*onecolwid + sepwid = 0.464
+%-----------------------------------------------------------
+
+\newlength{\sepwid}
+\newlength{\minisepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\setlength{\paperwidth}{65in}
+\setlength{\paperheight}{42in}
+\setlength{\sepwid}{0.026\paperwidth}
+\setlength{\minisepwid}{0.06\onecolwid}
+\setlength{\onecolwid}{0.225\paperwidth}
+\setlength{\twocolwid}{0.45\paperwidth}
+\setlength{\threecolwid}{0.675\paperwidth}
+\setlength{\topmargin}{-0.5in}
+\usetheme{confposter}
+\usepackage{exscale}
+\setdefaultleftmargin{1cm}{2cm}{}{}{}{}
+
+%-----------------------------------------------------------
+% The next part fixes a problem with figure numbering. Thanks Nishan!
+% When including a figure in your poster, be sure that the commands are typed in the following order:
+% \begin{figure}
+% \includegraphics[...]{...}
+% \caption{...}
+% \end{figure}
+% That is, put the \caption after the \includegraphics
+%-----------------------------------------------------------
+
+\usecaptiontemplate{
+\small
+\structure{\insertcaptionname~\insertcaptionnumber:}
+\insertcaption}
+
+%-----------------------------------------------------------
+% Define colours (see beamerthemeconfposter.sty to change these colour definitions)
+%-----------------------------------------------------------
+
+\setbeamercolor{block title}{fg=UTDOrange,bg=white}
+\setbeamercolor{block body}{fg=black,bg=white}
+\setbeamercolor{block alerted title}{fg=white,bg=UTDGreen!70}
+\setbeamercolor{block alerted body}{fg=black,bg=UTDGreen!10}
+
+%-----------------------------------------------------------
+% Custom definitions
+%-----------------------------------------------------------
+
+\newcommand{\NH}{\textbf{\textcolor{NHCor}{NH}}}
+\newcommand{\VO}{\textbf{\textcolor{VOCor}{VO}}}
+\newcommand{\CI}{\textbf{\textcolor{CICor}{CI}}}
+
+\newcommand{\NHCorName}{\textcolor{NHCor}{purple}}
+\newcommand{\VOCorName}{\textcolor{VOCor}{green}}
+\newcommand{\CICorName}{\textcolor{CICor}{blue}}
+
+<<define_colors, echo=FALSE, cache=TRUE, warning=FALSE>>=
+UTDOrange = "#C75B12"
+UTDGreen = "#008542"
+
+NHCor = "#CC69A7"
+VOCor = "#009E73"
+CICor = "#56B4E9" 
+
+exp_colors = c(NHCor, VOCor, CICor)
+@
+
+<<custom_functions, echo=FALSE, cache=TRUE, warning=FALSE>>=
+logistic<-function(t){
+  return(1/(1+exp(-t)))
+}
+logit<-function(eta){
+  return(exp(eta))
+}
+@
+
+%-----------------------------------------------------------
+% Bibliography Stuff
+%-----------------------------------------------------------
+
+\usepackage[backend=biber]{biblatex}
+\bibliography{bibliography}
+
+%-----------------------------------------------------------
+% Name and authors
+%-----------------------------------------------------------
+
+\title{Perception of voice gender in children's voices by cochlear implant users}
+\author{Daniel Guest, Vahid Montazeri, Michelle Kapolowicz, Peter Assmann}
+\institute{The University of Texas at Dallas, School of Behavioral and Brain Sciences}
+
+%-----------------------------------------------------------
+% Start the poster
+%-----------------------------------------------------------
+
+\begin{document}
+
+<<packages, cache=TRUE, message=FALSE, echo=FALSE, warning=FALSE, results='hide'>>=
+
+library(ggplot2) # Plotting
+library(cowplot) # Making plots prettier
+library(plyr) # Data processing
+library(dplyr) # Data processing
+library(scatterplot3d) # IDK why this is here
+library(grid) # For grids, duh!
+library(gridExtra) # For even more grids! 
+library(lme4) # For fitting hierarchical GLRMs
+library(ResourceSelection) # For hoslem.test
+library(reshape2) # For melting data
+library(merTools) # For model analysis
+library(gtable) # For facet labels
+
+@
+
+<<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
+# Import and preprocess data
+
+# Load data
+load("~/Documents/spl/honors/data/vowgen_clean_2017-04-01.RData")
+load("~/Documents/spl/honors/data/vowgen_acoust_2017-04-01.RData")
+
+# Rename CISIM as VO
+vga$experiment = as.character(vga$experiment)
+vga[vga$experiment == "CISIM", "experiment"] = "VO"
+vga$experiment = factor(vga$experiment, levels=c("NH", "VO", "CI"))
+
+# Subset data
+vga.NH <- vga[vga$experiment == "NH", ]
+vga.VO <- vga[vga$experiment == "VO", ]
+vga.CI <- vga[vga$experiment == "CI", ]
+
+# Rename and reorder sex levels in vga
+vga$sex = as.character(vga$sex)
+vga[vga$sex == "m", "sex"] = "Male"
+vga[vga$sex == "f", "sex"] = "Female"
+vga$sex = factor(vga$sex, levels=c("Male", "Female"))
+
+# Rename and reoder sex levels in a
+a$gender = as.character(a$gender)
+a[a$gender == "m", "gender"] = "Male"
+a[a$gender == "f", "gender"] = "Female"
+a$gender = factor(a$gender, levels=c("Male", "Female"))
+
+# Generate age.mean, age.sd, aee.mean, aee.sd
+age.mean <- mean(vga$age)
+age.sd <- sd(vga$age)
+aee.mean <- mean(vga$aee)
+aee.sd <- sd(vga$aee)
+
+# Rename conditions to be more readable
+vga <- vga %>% mutate(condition = plyr::revalue(condition, c("UN"="Unswapped", "FF"="FF Swapped", "F0"="F0 Swapped", "FX"="F0FF Swapped")))
+@
+
+<<do_model, echo=FALSE, cache=TRUE, warning=FALSE>>=
+# Run model
+m_dat <- vga %>% dplyr::select(age, sex, aee, listener, talker, corr, condition, experiment)
+age.sd <- sd(m_dat$age)
+age.mean <- mean(m_dat$age)
+aee.sd <- sd(m_dat$aee)
+aee.mean <- mean(m_dat$aee)
+m_dat$age <- (m_dat$age - age.mean)/(2*age.sd)
+m_dat$aee <- (m_dat$aee - aee.mean)/(2*aee.sd) 
+m_X <- m_dat %>% dplyr::select(age, sex, aee, condition, experiment)
+# Don't rerun model, just use old one
+# m <- glmer(corr ~ 1 + age*sex*aee*condition*experiment + (1 | listener) + (1 | talker), data=m_dat, family=binomial(link="logit"), control=glmerControl(optimizer="nloptwrap", calc.derivs=FALSE))
+load("~/Documents/spl/vowgen/2017_URA/model/m.RData")
+@
+
+<<save_model, echo=FALSE, cache=TRUE, warning=FALSE>>=
+# Save the model to disk in the model folder
+save(m, file="~/Desktop/ASA17Boston/model/m.RData")
+@
+
+<<set_digits, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE>>=
+options(digits=2)
+@
+
+\begin{frame}[t, fragile]
+	\begin{columns}[T] % Overall <Begin>
+		\begin{column}{\sepwid}\end{column}
+		\begin{column}{\onecolwid} % Questions and Methods <Begin>
+		\begin{alertblock}{Questions}
+				\textcolor{black}{When listening to the speech of children}
+		\begin{itemize}
+			\item What acoustic cues do listeners use to identify the gender of the talker?
+			\item How does age perception connect to voice gender perception (VGP)?
+			\item What happens when these cues are distorted or eliminated, as occurs in cochlear implant (CI) processing?
+		\end{itemize}
+		\end{alertblock}
+		\vskip1ex
+		\begin{block}{Background}
+        \begin{itemize}
+			\vskip1ex
+			\item \textbf{Acoustic cues of voice gender}
+			\begin{itemize}
+				\item Acoustic cue manipulation paradigms can reveal which cues listeners use \autocite{assmann06, hillenbrand09, skuk14}
+				\item Fundamental frequency (F0) and formant frequencies (FFs) are key \cite{hillenbrand09}
+				\item However, F0 and FFs are not the only cues listeners use \autocite{assmann06,skuk14}
+			\end{itemize}
+		\item \textbf{Voice gender in children's speech and the role of age perception}
+			\begin{itemize}
+				\item In children, average F0 and FFs vary systematically with age as well as gender (see Figure 1)
+				\item Previous research showed accurate age perception plays an important role \autocite{assmann15}
+				\item Relatively accurate age perception has been demonstrated in children's speech \autocite{amir11}
+			\end{itemize}
+		\item \textbf{VGP by CI users}
+			\begin{itemize}
+				\item CI users have limited VGP abilities \autocite{fu04, kovacic09}
+				\item Poor VGP possibly due to limited access to F0 and FFs \cite{kovacic09, fu04} 
+				\item Good temporal resolution could help CI users use F0 in VGP \autocite{fu04}
+				\item Good spectral resolution could help CI users use FFs in VGP \autocite{fu04}
+			\end{itemize}
+		\item \textbf{Significance}
+			\begin{itemize}
+				\item VGP tasks may be useful to measure availability of spectrotemporal cues in CI users \autocite{fu11}
+				\item Talker identity cues play a role in speech perception 
+			\end{itemize}
+        \end{itemize}
+		\vskip1ex
+		\end{block}
+		\begin{block}{Methods}
+		\begin{itemize}
+			\item \textbf{Stimuli:} /hVd/ syllables spoken by children from the North Texas area (age range: 5-18 years, medial vowels: /i/, /a/, /u/)
+			\vskip1ex
+			\vskip1ex
+			\begin{center}
+<<formant-plot, cache=TRUE, echo=FALSE, warning=FALSE, fig.height=4.5, fig.width=13>>=
+# Generate standard deviations
+sds <- a[a$condition == "UN", ] %>% group_by(gender, age) %>% summarize(F0.sd = sd(exp(F0))/sqrt(length(F0)), GMFF.sd = sd(exp(GMFF)/sqrt(length(GMFF)))) %>% melt(id.vars=c("gender", "age"))
+
+# Generate means
+means <- a[a$condition == "UN", ] %>% group_by(gender, age) %>% summarize(F0 = mean(exp(F0)), GMFF = mean(exp(GMFF))) %>% melt(id.vars=c("gender", "age")) %>% rename(Frequency=value, Formant=variable) 
+
+# Generate plot
+form_plot <- ggplot(data=means, aes(x=age, y=Frequency, color=gender)) + geom_point() + geom_line() + geom_errorbar(aes(ymax=Frequency+sds$value, ymin=Frequency-sds$value), width=0.5) # points+lines for means, error bars for standard error
+form_plot <- form_plot + scale_x_continuous(breaks=seq(5,18,2)) # Breaks at every other age value
+form_plot <- form_plot + xlab("Talker Age (years)") + ylab("Mean Frequency (Hz)") + labs(color="Talker Gender") # Axes labels
+form_plot <- form_plot + facet_wrap(~ Formant, ncol=2, scales="free") # Facet wrap
+form_plot <- form_plot + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+
+form_plot # Render
+@
+			\end{center}
+				\textbf{Figure 1: Mean F0, geometric mean of first three formants (GMFF)} 
+
+				Values averaged across talkers and tokens within each gender. Error bars show $\pm1$ standard error of the mean.
+
+			\vskip1ex
+
+			\item \textbf{Task:} Participants listened to isolated syllables presented in randomized order and made two responses: (1) \textbf{Voice Gender} (two-alternative forced choice) and (2) \textbf{Age} (continuous scale, graphical slider, range: 5 -- 18 years)
+
+		\end{itemize}
+		\vspace{-1em}
+		\begin{exampleblock}{}
+		\begin{itemize}
+			\item \textbf{Acoustic Cue Conditions:} STRAIGHT vocoder \cite{kawahara06} used to scale F0 contours and/or FF contours to opposite-sex averages at each talker age level
+			\vskip1ex
+					\hspace*{2em}\begin{tabularx}{\textwidth}{l l l}
+						\textbf{Unswapped} & Original F0 and FFs \\
+						\textbf{FF Swapped} & Original F0, scaled FFs \\
+						\textbf{F0 Swapped} & Scaled F0, original FFs \\
+						\textbf{F0FF Swapped} & Scaled F0 and FFs
+				\end{tabularx}
+
+			\vskip1ex
+			\item \textbf{Experiments:} 
+			\vskip1ex
+
+				\hspace*{2em}\begin{tabularx}{\textwidth}{l l}
+						\NH{} & 81 normal hearing (NH) adults \\
+						\VO{} & 37 NH adults attending to tone vocoder CI simulation \\
+						\CI{} & 5 CI users
+				\end{tabularx}
+
+				\small
+				\hspace*{6em}\begin{tabularx}{\textwidth}{l l l l l l}
+						Age & 60 & 70 & 55 & 60 & 74 \\
+						Age of implantation (L/R) & 53/55 & 65/64 & 57/56 & 57/$\emptyset$ & 52/$\emptyset$ \\ 
+						Age of hearing loss (L/R) & 30/30 & 52/52 & 0/0 & 2/2 & 1/1 \\ 
+						Device type (L/R) & N6/N6 & N5/N5 & N5/N5 & Naida/$\emptyset$ & N6/$\emptyset$ 
+				\end{tabularx}
+				
+				\vskip1ex
+		\end{itemize}
+		\end{exampleblock}
+		\begin{itemize}
+			\normalsize
+			\vskip1ex
+			\item \textbf{Other Details}: 
+				\begin{itemize}
+					\item \normalsize \NH{} \small and \normalsize \VO{} \small listeners completed one condition each
+					\item \normalsize \CI{} \small users completed a reduced set including all 4 conditions using only best implanted ear
+					\item 8 channel tone vocoder implemented according to specifications in \autocite{fu04}, 160 Hz envelope cutoff
+					\item Stimuli presented monaurally over headphones (NH listeners) or in free field (CI listeners) 
+				\end{itemize}
+		\end{itemize}
+		\vskip1ex
+		\end{block}
+    \end{column} % Questions and Methods <End>
+    \begin{column}{\sepwid}\end{column}			% empty spacer column
+    \begin{column}{\threecolwid} 
+		\begin{columns}[t] % Results and Discussion <Begin>
+			\begin{column}{\twocolwid} % Results <Begin>
+				\begin{block}{Results}
+					\begin{columns}[T] % Raw gender <Begin>
+						\begin{column}{0.7\linewidth}
+							\vskip1ex
+<<gender_response, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=20>>=
+# Include vga.NH subset because errors :(
+library(grid, gridExtra)
+vga.NH <- vga[vga$experiment == "NH", ]
+
+# Grab data
+dat <- vga %>% dplyr::group_by(age, sex, condition, experiment) %>% dplyr::summarize(corr = mean(corr))  
+
+# Grab highlight data
+highlightdat <- vga.NH %>% dplyr::group_by(age, sex, condition, experiment) %>% dplyr::summarize(corr = mean(corr))  
+
+# Make plot
+t <- ggplot() # Plot
+t <- t + scale_color_manual(values = exp_colors) #Colors 
+t <- t + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+t <- t + geom_hline(yintercept=0.5, linetype=2) + geom_hline(yintercept=0.25, linetype="dotted") + geom_hline(yintercept=0.75, linetype="dotted") # Horizontal reference lines
+t <- t + geom_line(data=dat, aes(x=age, y=corr, color=experiment)) + geom_point(data=dat, aes(x=age, y=corr, color=experiment)) # Lines and points
+t <- t + geom_point(data=highlightdat, aes(x=age, y=corr, color=experiment), size=2) + geom_line(data=highlightdat, aes(x=age, y=corr, color=experiment), size=2) # Highlight data
+t <- t + labs(color="") + ylab("Proportion Gender Correct") + xlab("Talker Age (years)") # Labels
+t <- t + ylim(c(0,1)) + xlim(c(5,18)) + scale_x_continuous(breaks=seq(5,18,2)) # Limits and axis marks
+t <- t + facet_grid(sex ~ condition) # Facets
+
+# ----- Add facet labels -----
+z <- ggplotGrob(t)
+# Examine layout
+# gtable_show_layout(z)
+
+# Top label
+# Add row (for general facet label) below row 5
+z <- gtable_add_rows(z, z$height[6], pos=5)
+# Add rectangle and text to row 6, where rectangle spans from left=4 to right=10
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Acoustic Cue Condition", gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=6, l=4, b=6, r=10, name=c("a", "b"))
+# Add spacer below row 6 (i.e., general facet label)
+z <- gtable_add_rows(z, unit(2/10, "line"), 6)
+
+# Right label
+# Add column (for general facet label) to the right of column 11
+z <- gtable_add_cols(z, z$widths[11], pos=11)
+# Add rectangle and text to column 11, where rectangle spans from top=9 to bottom=11
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Talker Gender", rot=-90, gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=9, l=12, b=11, r=12, name=c("y", "z"))
+# Add spacer column to the right of column 11 
+z <- gtable_add_cols(z, unit(2/10, "line"), 11)
+
+# Render
+grid.newpage()
+grid.draw(z)
+@
+						\end{column}
+						\begin{column}{0.3\linewidth}
+							\vskip2ex
+								\textbf{Figure 2: Proportion gender correct}
+
+								Each panel shows a different combination of acoustic cue condition and talker gender, while line color indicates listener group. 
+
+								\begin{itemize}
+									\small
+									\item Majority of male talkers correctly identified... 
+										\begin{itemize}
+											\small
+											\item by \normalsize \NH{} \small listeners after 9 years of age
+											\item by \normalsize \CI{} \small listeners after 13 years of age
+										\end{itemize}
+									\item \normalsize \CI{} \small listeners answered female for most younger talkers 
+										\begin{itemize}
+											\item This explains why \normalsize \CI{} \small listeners had higher proportion gender correct than \normalsize \NH{} \small listeners for female talkers
+										\end{itemize}
+									\item Listeners answered male for many older females in Unswapped
+									\item Across talker age, talker gender, and experiment, scaling F0 had larger effect than scaling FFs
+									\item Effect of acoustic cue condition interacted with talker age, talker gender, and experiment 
+								\end{itemize}
+						\end{column}
+					\end{columns} % Raw gender <End>
+					\begin{columns}[T] % Raw age <Begin>
+						\begin{column}{0.7\linewidth}
+							\vskip3ex
+<<age_response, cache=TRUE, echo=FALSE, warning=FALSE, message=FALSE, fig.height=8, fig.width=20>>=
+# Pull data
+library(grid)
+temp <- vga
+temp$age = as.factor(temp$age)
+
+# Generate plot
+d <- temp %>% dplyr::group_by(age, sex, condition, experiment) %>% summarize(median=median(agep), lower=quantile(agep, probs=0.25), upper=quantile(agep, probs=0.75))# Preprocess data
+t <- ggplot() # Initialize plot
+t <- t + geom_abline(intercept=5, slope=1, linetype=2) + geom_abline(intercept=8, slope=1, linetype="dotted") + geom_abline(intercept=2, slope=1, linetype="dotted") # Reference line
+t <- t + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+t <- t + geom_point(data=d, aes(x=age, y=median, color=experiment, size=experiment), position=position_dodge(width=0.75)) + geom_errorbar(data=d, aes(x=age, ymin=lower, ymax=upper, color=experiment, size=experiment), position=position_dodge(width=0.75), width=0)# Create dots and lines 
+t <- t + ylim(c(5,18)) + scale_y_continuous(breaks=seq(5,18,2)) + xlim(c(5,18)) + scale_x_discrete(breaks=seq(5,18,2)) # Set limits
+t <- t + scale_size_manual(values=c(2,1,1), guide=FALSE)
+t <- t + scale_color_manual(values = exp_colors) # Choose colors
+t <- t + xlab("Talker Age (years)") + ylab("Age Perceived (years)") + labs(color="") # Labels
+t <- t + facet_grid(sex ~ condition) # Faceting
+
+
+# ----- Add facet labels -----
+z <- ggplotGrob(t)
+# Examine layout
+# gtable_show_layout(z)
+
+# Top label
+# Add row (for general facet label) below row 5
+z <- gtable_add_rows(z, z$height[6], pos=5)
+# Add rectangle and text to row 6, where rectangle spans from left=4 to right=10
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Acoustic Cue Condition", gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=6, l=4, b=6, r=10, name=c("a", "b"))
+# Add spacer below row 6 (i.e., general facet label)
+z <- gtable_add_rows(z, unit(2/10, "line"), 6)
+
+# Right label
+# Add column (for general facet label) to the right of column 11
+z <- gtable_add_cols(z, z$widths[11], pos=11)
+# Add rectangle and text to column 11, where rectangle spans from top=9 to bottom=11
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Talker Gender", rot=-90, gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=9, l=12, b=11, r=12, name=c("y", "z"))
+# Add spacer column to the right of column 11 
+z <- gtable_add_cols(z, unit(2/10, "line"), 11)
+
+# Render
+grid.newpage()
+grid.draw(z)
+@
+						\end{column}
+						\begin{column}{0.3\linewidth}
+							\vskip4ex
+							\textbf{Figure 3: Median age perceived}
+
+							Each panel shows a different combination of acoustic cue condition and talker gender, while line color indicates listener group. Error bars indicate upper and lower quartiles.
+
+							\begin{itemize}
+								\small
+								\item \normalsize \VO{} \small and \normalsize \CI{} \small listeners overestimated age of younger talkers
+								\item Most listeners underestimated age of older female talkers in Unswapped 
+								\item Across talker age, talker gender, and experiment, scaling F0 had larger effect than scaling FFs
+								\item Results in Unswapped mirror results for opposite talker gender in F0FF Swapped
+								\item Correspondence between errors in VGP and errors in age perception suggests link 
+							\end{itemize}
+						\end{column}
+					\end{columns} % Raw age <End>
+					\vskip1ex
+				\end{block}
+			\end{column} % Results <End>
+			\begin{column}{\sepwid} \end{column}
+			\begin{column}{\onecolwid} % Discussion and misc <Begin>
+				\vspace{0pt}
+				\begin{alertblock}{Summary and Conclusions}
+					\begin{itemize}
+						\item For \normalsize \NH{} \small listeners...
+						\begin{itemize}
+							\item Accurate age perception tied to accurate VGP 
+							\item Older female talkers frequently mis-identified as younger male talkers 
+							\item Utilized both acoustic cues, but FFs more important for VGP of younger talkers and F0 for VGP of older talkers
+						\end{itemize}
+						\item For \normalsize \CI{} \small listeners...
+						\begin{itemize}
+							\item Depended more on F0 than on FFs in VGP task
+							\item Younger male talkers frequently mis-identified as older female talkers
+							\item Errors likely due to combination of poor age perception and heavier reliance on F0 
+						\end{itemize}
+						\item Future directions
+						\begin{itemize}
+							\item For \normalsize \NH{} \small listeners, scaling both cues did not flip VGP of older male talkers --- may need to investigate modifying other acoustic cues (e.g., properties of the voicing source)
+
+							\item Utilize more advanced acoustic simulations of CIs to address \normalsize \VO{} \small - \normalsize \CI{} \small discrepancies
+							\item Statistical modeling of link between acoustic properties and VGP/age perception
+						\end{itemize}
+					\end{itemize}
+				\end{alertblock}
+				\vskip1ex
+				\begin{block}{References}
+					\vskip1ex
+					\AtNextBibliography{\scriptsize}
+					\printbibliography
+					\vskip1ex
+					Work supported by NSF grant 1124479
+					\vskip1ex
+				\end{block}
+			\end{column} % Discussion <End>
+		\end{columns} % Results and Discussion <End>
+		\begin{columns}[T] % Model and Analysis <Begin>
+			\begin{column}{0.75\onecolwid} % Model <Begin>
+				\begin{block}{Model of VGP Data}
+					\vskip1ex
+					\begin{itemize}
+						\item \textbf{Type:} Multilevel logistic (GLRM) model 
+						\item \textbf{Predictors:} Talker age, talker gender, age estimation error, acoustic cue condition, experiment (and interactions)
+
+						\item \textbf{Implementation: } Implemented via lme4 package in R 
+							\begin{itemize}
+								\item Correct voice gender responses coded with a 1 and incorrect responses with a 0
+								\item Outcome variable was denoted $y_{i(jk)}$, for the $i$-th measurement from listener $j$ to a stimulus spoken by talker $k$
+								\item Intercepts were allowed to vary between listeners and talkers
+								\begin{equation*}
+									\text{logit}(y_{i(jk)}) = X_{i(jk)}\beta + u_{j} + v_{k} \enspace | \enspace u_{j} \sim N(0, \sigma_{u}^2), v_{k} \sim N(0, \sigma_{k}^2)
+								\label{eq:m.NHUN}
+								\end{equation*}
+							\end{itemize}
+					\end{itemize}
+				\vskip1ex
+				\end{block}
+				\begin{block}{Model Analysis}
+					\vskip1ex
+					\textbf{Questions:} To what extent did particular listeners make correct voice gender responses? To what extent was the voice gender of particular talkers correctly identified? 
+					\vskip2ex
+					\begin{center}
+<<random_effects, echo=FALSE, cache=TRUE, warning=FALSE, message=FALSE, fig.height=4.5, fig.width=10.25>>=
+random <- REsim(m)
+
+talkers <- random[random$groupFctr == "talker", ]
+talkers <- talkers %>% dplyr::arrange(median)
+talkers[,"index"] = 1:nrow(talkers)
+#talkers[substr(talkers$groupID,1,1) == "m", "sex"] = "Male"
+#talkers[substr(talkers$groupID,1,1) == "f", "sex"] = "Female"
+listeners <- random[random$groupFctr == "listener", ]
+listeners <- listeners %>% arrange(median)
+listeners[,"index"] = 1:nrow(listeners)
+random <- rbind(talkers, listeners)
+random <- random %>% mutate(groupFctr = plyr::revalue(groupFctr, c("listener"="Listener", "talker"="Talker")))
+random[,"lower"] = random[,"median"] - 2*random[,"sd"]
+random[,"upper"] = random[,"median"] + 2*random[,"sd"]
+random[,"inter"] = as.character((0 >= random[,"lower"]) & (0 <= random[,"upper"]))
+
+t <- ggplot()
+t <- t + geom_hline(yintercept=0, linetype=2) + geom_hline(yintercept=1, linetype="dotted") + geom_hline(yintercept=-1, linetype="dotted")
+t <- t + geom_point(data=random, aes(x=index, y=median, color=inter)) + geom_errorbar(data=random, aes(x=index, ymin=median-2*sd, ymax=median+2*sd, color=inter), width=0)
+t <- t + ylim(c(-2,2))
+t <- t + ylab("Median Coefficient Estimate")
+t <- t + scale_color_manual(values=c("black", "gray"), guide=FALSE)
+t <- t + facet_wrap(~ groupFctr, scales="free_x")
+t <- t + theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes and remove certain axis labels
+t
+@
+					\end{center}
+					\vskip1ex
+
+					\textbf{Figure 4: Median estimates of random intercepts for talkers and listeners}
+
+					Error bars indicate $\pm2$ standard deviations. Grey intervals indicate intersection with $0$.
+
+					\begin{itemize}
+						\small
+						\item More variation explained by talker than listener intercepts
+					\end{itemize}
+				\end{block}
+			\end{column} % Model <End>
+			\begin{column}{\sepwid} \end{column}
+			\begin{column}{2.25\onecolwid} % Analysis <Begin>
+				\begin{block}{Model Analysis (continued)}
+					\vskip1ex
+					\begin{columns}[T]
+						\begin{column}{0.51\onecolwid}
+							\vspace{1ex}
+
+							\textbf{Question:} How did listeners perform in the Unswapped condition when they identified talker age accurately? 
+
+							\vskip2ex
+							\begin{center}
+<<pointofcomparison, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.height=8, fig.width=7.25>>=
+library(grid)
+# Produce example
+ex <- draw(m, type="average")
+ex$condition = "UN"
+ex$sex = "Male"
+ex$aee = 0
+# Wiggle age, sex, and aee, and experiment 
+ex <- wiggle(ex, var="age", values=seq(5, 18, 1))
+ex <- wiggle(ex, var="sex", values=c("Male", "Female"))
+ex <- wiggle(ex, var="experiment", values=c("NH", "VO", "CI"))
+# Transform age and aee back into scaled version
+ex$aee = ex$aee - aee.mean
+ex$aee = ex$aee/(2*aee.sd)
+ex$age = ex$age - age.mean 
+ex$age = ex$age/(2*age.sd)
+# Predict
+ex$corr <- predict(m, newdata=ex)
+# Transform into probability and back into unscaled version
+ex$corr <- logistic(ex$corr)
+ex$aee = (ex$aee*2*aee.sd) + aee.mean
+ex$age = (ex$age*2*age.sd) + age.mean
+# Take out data points with impossible combinations
+ex[ex$age+ex$aee < 5 | ex$age+ex$aee > 18, "corr"] = NA
+# Factor aee
+ex$aee <- as.factor(ex$aee)
+ex$sex <- factor(ex$sex, levels=c("Male", "Female"))
+ex <- ex %>% mutate(condition = plyr::revalue(condition, c("UN"="Unswapped", "FF"="FF Swapped", "F0"="F0 Swapped", "FX"="F0FF Swapped")))
+
+# Extract highlight data
+highlightdata <- ex[ex$experiment == "NH",]
+
+# Generate plot
+p <- ggplot() # Main part
+p <- p + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+p <- p + geom_hline(yintercept=0.5, linetype=2) + geom_hline(yintercept=0.25, linetype="dotted") + geom_hline(yintercept=0.75, linetype="dotted") # Horizontal reference lines
+p <- p + geom_point(dat=ex, aes(x=age, y=corr, color=experiment)) + geom_line(dat=ex, aes(x=age, y=corr, color=experiment)) # Lines and points
+p <- p + geom_point(dat=highlightdata, aes(x=age, y=corr, color=experiment), size=2) + geom_line(dat=highlightdata, aes(x=age, y=corr, color=experiment), size=2) # Lines and points
+p <- p + xlab("Talker Age (years)") + ylab("Proportion Gender Correct") + labs(color="") # Labels
+p <- p + scale_color_manual(values = exp_colors) # Colors
+p <- p + geom_line(data=ex[ex$experiment == "NH",], aes(x=age, y=corr, color=experiment), size=1.2) + geom_point(data=ex[ex$experiment == "NH",], aes(x=age, y=corr, color=experiment), size=1.2) # Highlight data 
+p <- p + xlim(c(5,18)) + ylim(c(0,1)) + scale_x_continuous(breaks=seq(5,18,2)) # Limits and axis marks 
+p <- p + facet_grid(sex ~ condition)
+
+# ----- Add facet labels -----
+z <- ggplotGrob(p)
+# Examine layout
+# gtable_show_layout(z)
+
+# Top label
+# Add row (for general facet label) below row 5
+z <- gtable_add_rows(z, z$height[6], pos=5)
+# Add rectangle and text to row 6, where rectangle spans from left=4 to right=4
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Acoustic Cue Condition", gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=6, l=4, b=6, r=4, name=c("a", "b"))
+# Add spacer below row 6 (i.e., general facet label)
+z <- gtable_add_rows(z, unit(2/10, "line"), 6)
+
+# Right label
+# Add column (for general facet label) to the right of column 13 
+z <- gtable_add_cols(z, z$widths[5], pos=5)
+# Add rectangle and text to column 6, where rectangle spans from top=9 to bottom=11
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Talker Gender", rot=-90, gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=9, l=6, b=11, r=6, name=c("y", "z"))
+# Add spacer column to the right of column 5 
+z <- gtable_add_cols(z, unit(2/10, "line"), 5)
+
+# Render
+grid.newpage()
+grid.draw(z)
+
+@
+							\end{center}	
+							\vskip1ex
+						
+							\textbf{Figure 5: Predicted proportion gender correct given perfect age estimation, Unswapped}
+
+							Panels and line color indicate the same as in Figures 2 and 3. Intercepts for listener and talker were selected to be zero (i.e., predictions here correspond to "average" talkers and listeners). 
+
+							\begin{itemize}
+								\small
+								\item Listeners made more correct responses to older talkers and male talkers 
+								\item Constitutes a baseline for comparisons in Figures 6 and 7
+							\end{itemize}
+						\end{column}
+						\begin{column}{\minisepwid} \end{column}
+						\begin{column}{1.68\onecolwid}
+							\begin{columns}[T]
+								\begin{column}{.65\linewidth}
+									\vspace{1ex}
+<<m.age.aee.int, cache=TRUE, echo=FALSE, warning=FALSE, message=FALSE, fig.height=8, fig.width=16>>=
+library(grid)
+# Produce example
+ex <- draw(m, type="average")
+ex$condition = "UN"
+ex$sex = "Male"
+ex$aee = 0
+# Wiggle age, sex, and aee, and experiment 
+ex <- wiggle(ex, var="age", values=seq(5, 18, 1))
+ex <- wiggle(ex, var="sex", values=c("Male", "Female"))
+ex <- wiggle(ex, var="aee", values=c(-4,-2,0,2,4))
+ex <- wiggle(ex, var="experiment", values=c("NH", "VO", "CI"))
+# Transform age and aee back into scaled version
+ex$aee = ex$aee - aee.mean
+ex$aee = ex$aee/(2*aee.sd)
+ex$age = ex$age - age.mean 
+ex$age = ex$age/(2*age.sd)
+# Predict
+ex$corr <- predict(m, newdata=ex)
+# Transform into probability and back into unscaled version
+ex$corr <- logistic(ex$corr)
+ex$aee = (ex$aee*2*aee.sd) + aee.mean
+ex$age = (ex$age*2*age.sd) + age.mean
+# Take out data points with impossible combinations
+ex[ex$age+ex$aee < 5 | ex$age+ex$aee > 18, "corr"] = NA
+# Factor aee
+ex$aee <- as.factor(ex$aee)
+ex$sex <- factor(ex$sex, levels=c("Male", "Female"))
+
+# Contrast to 0 aee, rather than directly plot all 5 wiggled levels
+exold <- ex
+ex <- ex[ex$aee != 0,]
+ex[ex$aee == -4, "corr"] = ex[ex$aee == -4, "corr"] - exold[exold$aee == 0, "corr"]
+ex[ex$aee == -2, "corr"] = ex[ex$aee == -2, "corr"] - exold[exold$aee == 0, "corr"]
+ex[ex$aee == 2, "corr"] = ex[ex$aee == 2, "corr"] - exold[exold$aee == 0, "corr"]
+ex[ex$aee == 4, "corr"] = ex[ex$aee == 4, "corr"] - exold[exold$aee == 0, "corr"]
+
+# Make aee labels readable
+ex$aee = as.factor(ex$aee)
+ex <- ex %>% mutate(aee = plyr::revalue(aee, c("-4"="4 Years Under", "-2"="2 Years Under", "0"="No error", "2"="2 Years Over", "4"="4 Years Over")))
+
+# Extract highlight data
+highlightdata <- ex[ex$experiment == "NH",]
+
+# Generate plot
+p <- ggplot() # Main part
+p <- p + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+p <- p + geom_hline(yintercept=0, linetype=2) + geom_hline(yintercept=0.1, linetype="dotted") + geom_hline(yintercept=0.2, linetype="dotted") + geom_hline(yintercept=-0.1, linetype="dotted") + geom_hline(yintercept=-0.2, linetype="dotted") # Horizontal reference lines
+p <- p + geom_point(dat=ex, aes(x=age, y=corr, color=experiment)) + geom_line(dat=ex, aes(x=age, y=corr, color=experiment)) # Lines and points
+p <- p + geom_point(dat=highlightdata, aes(x=age, y=corr, color=experiment), size=2) + geom_line(dat=highlightdata, aes(x=age, y=corr, color=experiment), size=2) # Lines and points
+p <- p + xlab("Talker Age (years)") + ylab("Proportion Gender Correct (predicted change)") + labs(color="") # Labels
+p <- p + scale_color_manual(values = exp_colors) # Colors
+p <- p + geom_line(data=ex[ex$experiment == "NH",], aes(x=age, y=corr, color=experiment), size=1.2) + geom_point(data=ex[ex$experiment == "NH",], aes(x=age, y=corr, color=experiment), size=1.2) # Highlight data 
+p <- p + xlim(c(5,18)) + scale_x_continuous(breaks=seq(5,18,2)) # Limits and axis marks 
+p <- p + facet_grid(sex ~ aee)
+
+# ----- Add facet labels -----
+z <- ggplotGrob(p)
+# Examine layout
+# gtable_show_layout(z)
+
+# Top label
+# Add row (for general facet label) below row 5
+z <- gtable_add_rows(z, z$height[6], pos=5)
+# Add rectangle and text to row 6, where rectangle spans from left=4 to right=10
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Age Estimation Error", gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=6, l=4, b=6, r=10, name=c("a", "b"))
+# Add spacer below row 6 (i.e., general facet label)
+z <- gtable_add_rows(z, unit(2/10, "line"), 6)
+
+# Right label
+# Add column (for general facet label) to the right of column 11 
+z <- gtable_add_cols(z, z$widths[11], pos=11)
+# Add rectangle and text to column 12, where rectangle spans from top=9 to bottom=11
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Talker Gender", rot=-90, gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=9, l=12, b=11, r=12, name=c("y", "z"))
+# Add spacer column to the right of column 11 
+z <- gtable_add_cols(z, unit(2/10, "line"), 11)
+
+# Render
+grid.newpage()
+grid.draw(z)
+@
+								\end{column}
+								\begin{column}{.35\linewidth}
+									\vspace{2ex}
+									\textbf{Question:} How was VGP affected when listeners under- or overestimated the age of the talker?
+
+									\hfill
+
+									\textbf{Figure 6: Predicted change in proportion gender correct at different levels of age estimation error, Unswapped}
+									
+									Plotted relative to baseline in Figure 5. Each panel shows a different combination of age estimation error and talker gender. Line color indicates listener group. Impossible combos of age estimation error and talker age are not shown.
+
+									\begin{itemize}
+										\small
+										\item Underestimating age of older female talkers linked to VGP errors
+										\item Overestimating age of younger male talkers linked to VGP errors
+									\end{itemize}
+								\end{column}
+							\end{columns}
+							\begin{columns}[T]
+								\begin{column}{.65\linewidth}
+									\vskip6ex
+<<condition_contrast, cache=TRUE, echo=FALSE, warning=FALSE, message=FALSE, fig.height=8, fig.width=16>>=
+# Produce example
+library(grid)
+ex <- draw(m, type="average")
+ex$condition = "UN"
+ex$sex = "Male"
+ex$aee = 0
+# Wiggle age, sex, and aee, and experiment 
+ex <- wiggle(ex, var="age", values=seq(5, 18, 1))
+ex <- wiggle(ex, var="sex", values=c("Male", "Female"))
+ex <- wiggle(ex, var="experiment", values=c("NH", "VO", "CI"))
+ex <- wiggle(ex, var="condition", values=c("UN", "FF", "F0", "FX"))
+# Transform age and aee back into scaled version
+ex$aee = ex$aee - aee.mean
+ex$aee = ex$aee/(2*aee.sd)
+ex$age = ex$age - age.mean 
+ex$age = ex$age/(2*age.sd)
+# Predict
+ex$corr <- predict(m, newdata=ex)
+ex$sex <- factor(ex$sex, levels=c("Male", "Female"))
+ex$condition <- factor(ex$condition, levels=c("UN", "FF", "F0", "FX"))
+# Transform into probability and unscaled age/aee data 
+ex$corr <- logistic(ex$corr)
+ex$aee = (ex$aee*2*aee.sd) + aee.mean
+ex$age = (ex$age*2*age.sd) + age.mean
+# Separate by condition 
+un <- ex[ex$condition == "UN",]
+ff <- ex[ex$condition == "FF",]
+f0 <- ex[ex$condition == "F0",]
+fx <- ex[ex$condition == "FX",]
+# Subtract UN means from other means
+ff$corr <- ff$corr - un$corr
+f0$corr <- f0$corr - un$corr
+fx$corr <- fx$corr - un$corr
+# Take only FF/F0/FX portion of ex
+dat <- ex[ex$condition == "FF" | ex$condition == "F0" | ex$condition == "FX",]
+# Replace ex corr with mean subtracted corrs
+dat$corr = c(ff$corr,f0$corr,fx$corr)
+# Rename conditions to be more readable
+dat <- dat %>% mutate(condition = plyr::revalue(condition, c("FF"="FF Swapped", "F0"="F0 Swapped", "FX"="F0FF Swapped")))
+# Snag highlight data
+highlightdat <- dat[dat$experiment == "NH",]
+
+# Generate plot
+t <- ggplot()
+t <- t + scale_color_manual(values = exp_colors) #Colors 
+t <- t + theme(axis.title=element_text(size=22), axis.text=element_text(size=18), legend.title=element_text(size=22), legend.text=element_text(size=20), strip.text=element_text(size=22)) # Change font sizes
+t <- t + geom_hline(yintercept=0, linetype=2) + geom_hline(yintercept=0.25, linetype="dotted") + geom_hline(yintercept=0.50, linetype="dotted") + geom_hline(yintercept=-0.25, linetype="dotted") + geom_hline(yintercept=-0.5, linetype="dotted") + geom_hline(yintercept=-0.75, linetype="dotted") # Horizontal reference lines
+t <- t + geom_line(data=dat, aes(x=age, y=corr, color=experiment)) + geom_point(data=dat, aes(x=age, y=corr, color=experiment)) # Lines and points
+t <- t + geom_line(data=highlightdat, aes(x=age, y=corr, color=experiment), size=2) + geom_point(data=highlightdat, aes(x=age, y=corr, color=experiment), size=2) # Lines and points, highlight for NH
+t <- t + labs(color="") + ylab("Proportion Gender Correct (predicted change)") + xlab("Talker Age (years)") # Labels
+t <- t + xlim(c(5,18)) + scale_x_continuous(breaks=seq(5,18,2)) # Limits and axis marks
+t <- t + facet_grid(sex ~ condition) # Facets
+
+# ----- Add facet labels -----
+z <- ggplotGrob(t)
+# Examine layout
+# gtable_show_layout(z)
+
+# Top label
+# Add row (for general facet label) below row 5
+z <- gtable_add_rows(z, z$height[6], pos=5)
+# Add rectangle and text to row 6, where rectangle spans from left=4 to right=8
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Acoustic Cue Condition", gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=6, l=4, b=6, r=8, name=c("a", "b"))
+# Add spacer below row 6 (i.e., general facet label)
+z <- gtable_add_rows(z, unit(2/10, "line"), 6)
+
+# Right label
+# Add column (for general facet label) to the right of column 9 
+z <- gtable_add_cols(z, z$widths[9], pos=9)
+# Add rectangle and text to column 10, where rectangle spans from top=9 to bottom=11
+z <- gtable_add_grob(z,
+					 list(rectGrob(gp=gpar(col=NA, fill="gray85", size=.5)),
+						  textGrob("Talker Gender", rot=-90, gp=gpar(cex=.75, fontface="bold", fontsize=26, col="black"))),
+					 t=9, l=10, b=11, r=10, name=c("y", "z"))
+# Add spacer column to the right of column 9 
+z <- gtable_add_cols(z, unit(2/10, "line"), 9)
+
+# Render
+grid.newpage()
+grid.draw(z)
+@
+								\end{column}
+								\begin{column}{.35\linewidth}
+									\vskip7ex
+									\textbf{Question:} How was VGP affected by different acoustic cue conditions? 
+
+									\hfill
+
+									\textbf{Figure 7: Predicted change in proportion gender correct in different acoustic cue conditions} 
+
+									Plotted relative to baseline in Figure 5. Panels and line color indicate the same as in Figures 2 and 3. Here, age estimation error is fixed at 0 years.
+
+									\begin{itemize}
+										\small
+										\item Swapping both cues usually had larger effect than swapping one cue for \normalsize \NH{} \small listeners
+										\item Swapping both cues often had similar effect to swapping only F0 for \normalsize \VO{} \small and \normalsize \CI{} \small listeners
+									\end{itemize}
+								\end{column}
+							\end{columns}
+
+						\end{column}
+					\end{columns}
+				\end{block}
+			\end{column} % Analysis <End>
+		\end{columns} % Model and Analysis <End>
+	\end{column}
+	\begin{column}{\sepwid}\end{column}			% empty spacer column
+\end{columns} % Overall <End>
+\end{frame}
+\end{document}
