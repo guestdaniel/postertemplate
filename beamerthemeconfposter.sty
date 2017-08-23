@@ -1,10 +1,13 @@
 %==============================================================================
-% Beamer style for the poster template posted at
-% http://www.nathanieljohnston.com/2009/08/latex-poster-template/
+% Conference poster style theme for beamerposter 
+% 
+% Sourced from Nathaniel Johnson at:
+%	http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %
-% Created by the Computational Physics and Biophysics Group at Jacobs University
-% https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
-% Modified by Nathaniel Johnston (nathaniel@nathanieljohnston.com) in August 2009
+% Created by the Computational Physics and Biophysics Group at Jacobs University:
+%	https://teamwork.jacobs-university.de:8443/confluence/display/CoPandBiG/LaTeX+Poster
+%
+% Modified by Daniel Guest (guest121@umn.edu) in August 2017
 % =============================================================================
 
 \ProvidesPackage{beamerthemeconfposter}
@@ -33,7 +36,6 @@
 \definecolor{dgreen} {RGB}{78,138,21}
 \definecolor{nblue}  {RGB}{28,130,185}
 \definecolor{jblue}  {RGB}{20,50,100}
-
 
 %----------------------------------------------------------------------------
 % More colours added due to conflict with Colordvi package
@@ -114,10 +116,10 @@
 \definecolor{White}		  	    {RGB}{255, 255, 255}    % White  No PANTONE match
 
 %--------------------------------------------------------
-% UTD COLORS 
+% THE UNIVERSITY OF TEXAS AT DALLAS COLORS 
 %--------------------------------------------------------
-\definecolor{UMNGold}           {RGB}{225, 204, 51}
-\definecolor{UMNMaroon}         {RGB}{122, 0, 25}
+\definecolor{flameorange}       {RGB}{199, 91, 18}
+\definecolor{ecogreen}          {RGB}{0, 133, 66}
 \definecolor{solarorange}	    {RGB}{233, 131, 0}
 \definecolor{sparkorange}       {RGB}{255, 182, 18}
 \definecolor{seedlinggreen}     {RGB}{201, 221, 3}
@@ -130,14 +132,20 @@
 \definecolor{warmgray6}         {RGB}{165, 157, 149}
 \definecolor{warmgray4}         {RGB}{183, 177, 169}
 
-%---------------------------------------------------------
-% EXPERIMENT COLORS
-%---------------------------------------------------------
-\definecolor{NHCor}             {HTML}{CC69A7}
-\definecolor{VOCor}				{HTML}{009E73}
-\definecolor{CICor}             {HTML}{56B4E9}
+%--------------------------------------------------------
+% UNIVERSITY OF MINNESOTA COLORS 
+%--------------------------------------------------------
 
-% set the basic colors
+\definecolor{UMNGold}           {RGB}{225, 204, 51}
+\definecolor{UMNMaroon}         {RGB}{122, 0, 25}
+% Good pairs
+\definecolor{palegreen}         {RGB}{182, 206, 182}
+
+%--------------------------------------------------------
+% SET COLORS
+%--------------------------------------------------------
+
+% Set the basic color palette
 \setbeamercolor{palette primary}   {fg=black,bg=white}
 \setbeamercolor{palette secondary} {fg=black,bg=white}
 \setbeamercolor{palette tertiary}  {bg=jblue,fg=white}
@@ -148,19 +156,19 @@
 \setbeamercolor{cboxb}{fg=black,bg=UMNMaroon}
 \setbeamercolor{cboxr}{fg=black,bg=red}
 
-% set colors for itemize/enumerate
+% Set colors for itemize/enumerate
 \setbeamercolor{item}{fg=UMNMaroon}
 \setbeamercolor{item projected}{fg=white,bg=UMNMaroon}
 
-% set colors for blocks
+% Set colors for regular blocks
 \setbeamercolor{block title}{fg=ngreen,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
 
-% set colors for alerted blocks (blocks with frame)
+% Set colors for alert blocks
 \setbeamercolor{block alerted title}{fg=white,bg=jblue}
 \setbeamercolor{block alerted body}{fg=black,bg=jblue!10}
 
-% set the fonts
+% Set fonts
 \setbeamerfont{section in head/foot}{series=\bfseries}
 \setbeamerfont{block title}{series=\bfseries\sffamily}
 \setbeamerfont{block alerted title}{series=\bfseries\sffamily}
@@ -168,14 +176,14 @@
 \setbeamerfont{frametitle}{size=\Large}
 \setbeamerfont{block body}{series=\rmfamily}
 
-% set some beamer theme options
+% Set some Beamer theme options
 \setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
 \setbeamertemplate{sections/subsections in toc}[square]
 \setbeamertemplate{items}[circle]
 \setbeamertemplate{blocks}[width=0.0]
 \beamertemplatenavigationsymbolsempty
 
-% set bibliography style
+% Set bibliography style
 \setbeamertemplate{bibliography item}[text]
 \setbeamercolor{bibliography item}{fg=black,bg=white}
 \setbeamercolor{bibliography entry author}{fg=black,bg=white}
@@ -188,31 +196,38 @@
 \makeatletter
 \makeatother
 
-%==============================================================================
-% build the poster title
-%==============================================================================
+%--------------------------------------------------------
+% Build the poster title
+%--------------------------------------------------------
+
+\newlength{\barlength}
+\setlength{\barlength}{47in}
 \setbeamertemplate{headline}{
- \leavevmode
-  \begin{columns}
-   \begin{column}{0.20\linewidth}
-   \centering
-   \hspace*{1.5in} \includegraphics[scale=0.20]{umnlogotemp}
-   \end{column}
-   \begin{column}{0.80\linewidth}
-    \vskip1cm
-    \hspace{1em} \usebeamercolor{title in headline}{\color{UMNMaroon}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
-    \hspace{1em} \usebeamercolor{author in headline}{\color{warmgray8}\Large{\insertauthor}\\[1ex]}
-    \hspace{1em} \usebeamercolor{institute in headline}{\color{warmgray8}\large{\insertinstitute}\\[1ex]}
-    \vskip1cm
-   \end{column}
-   \vspace{1cm}
-  \end{columns}
- \vspace{0.5in}
- \hspace{0.5in}\begin{beamercolorbox}[wd=39in ,colsep=0.15cm]{cboxb}\end{beamercolorbox}
- \vspace{0.1in}
+	\leavevmode
+	\begin{columns}
+		\begin{column}{\sepwid} \end{column}
+		\begin{column}{\onecolwid}
+			\centering \includegraphics[scale=0.25]{umnlogotemp}
+		\end{column}
+		\begin{column}{\sepwid} \end{column}
+        \begin{column}{\threecolwid}
+			\vskip1cm
+			\hspace{1em} \usebeamercolor{title in headline}{\color{UMNMaroon}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
+			\hspace{1em} \usebeamercolor{author in headline}{\color{warmgray8}\Large{\insertauthor}\\[1ex]}
+			\hspace{1em} \usebeamercolor{institute in headline}{\color{warmgray8}\large{\insertinstitute}\\[1ex]}
+			\vskip1cm
+		\end{column}
+		\begin{column}{\sepwid} \end{column}
+	\end{columns}
+\vspace{0.5in}
+\hspace{0.5in}\begin{beamercolorbox}[wd=\barlength,colsep=0.15cm]{cboxb}\end{beamercolorbox}\hspace{0.5in}
+\vspace{0.1in}
 }
 
-% Block definition
+%--------------------------------------------------------
+% Define standard block environment
+%--------------------------------------------------------
+
 \setbeamertemplate{block begin}
 {
   \par\vskip\medskipamount
@@ -243,7 +258,10 @@
   \vskip\smallskipamount
 }
 
-% Alert block definition (with frame)
+%--------------------------------------------------------
+% Define alert block environment
+%--------------------------------------------------------
+
 \setbeamertemplate{block alerted begin}
 {
   \par\vskip\medskipamount
@@ -276,7 +294,10 @@
   \vskip\smallskipamount
 }
 
-% Alert block definition (with frame)
+%--------------------------------------------------------
+% Define example block environment
+%--------------------------------------------------------
+
 \setbeamertemplate{block example begin}
 {
   \par\vskip\medskipamount

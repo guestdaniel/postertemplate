@@ -7,12 +7,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[final]{beamer}
-\usepackage[scale=1.00]{beamerposter}
+\usepackage[scale=1.20]{beamerposter}
 \usepackage{graphicx} % Importing images  
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
 \usepackage{booktabs} % Better tables
 \usepackage{amsmath} % Better tables
+\usepackage{hyperref} % URLs
 \usepackage[neverdecrease]{paralist} % Control over list indentation
 \usepackage[english]{babel}
 \usepackage{blindtext}
@@ -23,6 +24,10 @@
 % The separation I chose is 0.024 and I want 4 columns
 % Then set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
 % Set twocolwid to be 2*onecolwid + sepwid = 0.464
+% Formulae for n columns:
+%	onecolwid = (1/n)*(1-(n+1)*sepwid)
+%   twocolwid = 2*onecolwid + sepwid
+%   threecolwid = 3*onecolwid + 2*sepwid
 %-----------------------------------------------------------
 
 \newlength{\sepwid}
@@ -30,13 +35,13 @@
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
-\setlength{\paperwidth}{40in} 
-\setlength{\paperheight}{30in}
+\setlength{\paperwidth}{48in} 
+\setlength{\paperheight}{36in}
 \setlength{\sepwid}{0.024\paperwidth}
 \setlength{\minisepwid}{0.06\onecolwid}
 \setlength{\onecolwid}{0.22\paperwidth}
 \setlength{\twocolwid}{0.464\paperwidth}
-\setlength{\threecolwid}{0.675\paperwidth}
+\setlength{\threecolwid}{0.708\paperwidth}
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
 \usepackage{exscale}
@@ -63,7 +68,7 @@
 
 \setbeamercolor{block title}{fg=UMNMaroon,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
-\setbeamercolor{block alerted title}{fg=white,bg=UMNGold!70}
+\setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon!70}
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
 %-----------------------------------------------------------
@@ -86,8 +91,8 @@ UMNMaroon = "#7a0019" # R:122 G:0 B:25
 % Name and authors
 %-----------------------------------------------------------
 
-\title{A Title}
-\author{Authors}
+\title{An example poster using KnitR and LaTeX}
+\author{Daniel Guest}
 \institute{University of Minnesota, Department of Psychology, Auditory Perception and Cognition Lab}
 
 %-----------------------------------------------------------
@@ -99,6 +104,7 @@ UMNMaroon = "#7a0019" # R:122 G:0 B:25
 <<packages, cache=TRUE, message=FALSE, echo=FALSE, warning=FALSE, results='hide'>>=
 library(dplyr)
 library(ggplot2)
+library(cowplot)
 @
 
 <<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
@@ -114,18 +120,67 @@ options(digits=2)
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 1 <Begin>
 				\begin{block}{Introduction}
-						\blindtext
+						\begin{itemize}
+							\item This is an example poster created in \LaTeX{}
+							\item A few \LaTeX{} packages and other pieces of code and software are used to make this all work:
+							\begin{itemize}
+								\item The beamer and beamerposter packages are integral to this poster
+								\item A slightly modified version of the beamerposter theme available from \url{http://www.nathanieljohnston.com/2009/08/latex-poster-template/} was used to style the visual aspects of the poster
+								\item KnitR was used to allow the output of R code (text, numbers, and figures) to be included directly in the poster
+							\end{itemize}
+						\end{itemize}
 				\end{block}
 				\begin{alertblock}{Motivations}
-						\blindtext
+						Why use \LaTeX{} to make a poster? What advantages does it offer over PowerPoint or other alternatives?
+						\begin{itemize}
+								\item LaTeX{} emphasizes a clear separation of content from form, allowing you to focus on the ``what'' rather than the ``how'' 
+								\item KnitR allows for syntax-highlighted R code, or the output of R code, to be included directly in the poster 
+								\item LaTeX{} has great tools for high-quality typesetting of math, like $\int 2x^2 dx$
+								\item Bibliography systems like biblatex make managing citations and including them in your poster easy
+								\item If there's something unique you need to be able to do (like write International Phonetic Alphabet, or draw diagrams), you can likely extend \LaTeX{} through packages to do so
+						\end{itemize}
 				\end{alertblock}
-				\begin{block}{Methods}
-						\blindtext
+				\begin{block}{How it works}
+						\begin{itemize}
+							\item The files
+								\begin{itemize}
+									\item beamerthemconfposter.sty --- contains definitions of the title and blocks, as well as colors and theme options
+									\item beamerposter.sty --- provides the beamerposter package
+									\item poster.Rnw --- the source file, which is turned into a .tex file by KnitR
+								\end{itemize}
+							\item The source file
+								\begin{itemize}
+							\item The poster is composed of a title and columns, with each column being subdivided into blocks
+							\item Blocks contain the content of the poster, and come in two flavors -- normal (like the first block, ``Introduction'') and alert (like the this block, ``Motivations'')
+							\item R code is delimited by special characters <<>> and @
+								\end{itemize}
+						\end{itemize}
 				\end{block}
 		\end{column} % Column 1 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
-				\begin{block}{Results}
+				\begin{block}{Some examples}
+				KnitR supports high-quality syntax-highlighting of R (and many other languages), as well as directly including the output of R in the output document
+<<iris_example_1, cache=TRUE>>=
+my_data = iris
+my_summary = my_data %>% group_by(Species) %>% summarize(sepallen=mean(Sepal.Length),
+                                                         sepalwid=mean(Sepal.Width),
+                                                         petallen=mean(Petal.Length),
+                                                         petalwid=mean(Petal.Width))
+my_summary
+@
+
+This functionality includes graphs!
+<<iris_example_2, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth">>=
+ggplot(my_data, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) + 
+     geom_point() + facet_wrap(~Species)
+@
+
+And, there's a variety of options to control whether or not your R code is visible or hidden and the size and characteristics of your output text and/or graphs. For example, here's a graph using the airquality data set in R, but the actual R code that generated the graph hidden in the output document.
+
+<<airquality_example_1, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth", warning=FALSE, echo=FALSE>>=
+ggplot(airquality, aes(x=Temp, y=Ozone, color=as.factor(Month))) + geom_point() 
+@
 				\end{block}
 		\end{column} % Column 2/3 <End>
 		\begin{column}{\sepwid} \end{column} % Spacer column
