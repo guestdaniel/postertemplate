@@ -56,6 +56,7 @@
 \definecolor{errorcolor}{rgb}{1, 0, 0}
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
+\let\hlesc\hlstd \let\hlpps\hlstd \let\hllin\hlstd \let\hlslc\hlcom \let\hlppc\hlcom
 \usepackage{alltt}
 \usepackage[scale=1.20]{beamerposter}
 \usepackage{graphicx} % Importing images  
@@ -140,7 +141,7 @@
 
 \title{An example poster using KnitR and LaTeX}
 \author{Daniel Guest}
-\institute{University of Minnesota, Department of Psychology, Auditory Perception and Cognition Lab}
+\institute{University of Somewhere, Department of Something, One of the Labs}
 
 %-----------------------------------------------------------
 % Start the poster
@@ -183,15 +184,15 @@
 						\begin{itemize}
 							\item The files
 								\begin{itemize}
-									\item beamerthemconfposter.sty --- contains definitions of the title and blocks, as well as colors and theme options
-									\item beamerposter.sty --- provides the beamerposter package
-									\item poster.Rnw --- the source file, which is turned into a .tex file by KnitR
+									\item \texttt{beamerthemconfposter.sty} --- contains definitions of the title and blocks, as well as colors and theme options
+									\item \texttt{beamerposter.sty} --- provides the beamerposter package
+									\item \texttt{poster.Rnw} --- the source file, which is turned into a .tex file by KnitR
 								\end{itemize}
 							\item The source file
 								\begin{itemize}
 							\item The poster is composed of a title and columns, with each column being subdivided into blocks
 							\item Blocks contain the content of the poster, and come in two flavors -- normal (like the first block, ``Introduction'') and alert (like the this block, ``Motivations'')
-							\item R code is delimited by special characters <<>> and @
+							\item R code is delimited by special characters \texttt{<<>>} and \texttt{@}
 								\end{itemize}
 						\end{itemize}
 				\end{block}
@@ -200,7 +201,7 @@
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
 				\begin{block}{Some examples}
 				KnitR supports high-quality syntax-highlighting of R (and many other languages), as well as directly including the output of R in the output document
-\begin{knitrout}
+\begin{knitrout}\tiny
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{my_data} \hlkwb{=} \hlstd{iris}
@@ -222,7 +223,7 @@
 \end{knitrout}
 
 This functionality includes graphs!
-\begin{knitrout}
+\begin{knitrout}\tiny
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{ggplot}\hlstd{(my_data,} \hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=Sepal.Length,} \hlkwc{y}\hlstd{=Sepal.Width,} \hlkwc{color}\hlstd{=Petal.Length))} \hlopt{+}
@@ -236,7 +237,10 @@ This functionality includes graphs!
 And, there's a variety of options to control whether or not your R code is visible or hidden and the size and characteristics of your output text and/or graphs. For example, here's a graph using the airquality data set in R, but the actual R code that generated the graph hidden in the output document.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Picking joint bandwidth of 2.65}}\end{kframe}
 \includegraphics[width=\linewidth]{figure/airquality_example_1-1} 
 
 \end{knitrout}
@@ -244,7 +248,48 @@ And, there's a variety of options to control whether or not your R code is visib
 		\end{column} % Column 2/3 <End>
 		\begin{column}{\sepwid} \end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 4 <Begin>
-				\begin{block}{Conclusions}
+				\begin{block}{Resources}
+					\begin{itemize}
+						\item \url{http://www.personal.kent.edu/~rmuhamma/Systems/latex.html} --- Big collection of \LaTeX{} resources
+						\item \url{https://yihui.name/knitr/} --- overview of KnitR
+						\item \url{https://yihui.name/knitr/options/} --- KnitR options to modify the behavior of R code chunks
+					\end{itemize}
+				\end{block}
+				\begin{block}{An example compilation in Linux}
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\noindent
+\ttfamily
+\hlstd{Rscript\ }\hlopt{{-}}\hlstd{e\ }\hlstr{"library(knitr);\ knitr('./poster.Rnw')"}\hlstd{\hspace*{\fill}\\
+latexmk\ }\hlopt{{-}}\hlstd{pdf\ poster.tex}\hspace*{\fill}
+\mbox{}
+\normalfont
+\end{kframe}
+\end{knitrout}
+				\end{block}
+				\begin{block}{More examples of nice things \LaTeX{} can do}
+					\begin{itemize}
+							\item Math typesetting
+									\begin{equation}
+											\nabla \mathbf{f} = \frac{\partial\mathbf{f}}{\partial x}\mathbf{\hat{i}} + \frac{\partial\mathbf{f}}{\partial y}\mathbf{\hat{j}} + \frac{\partial\mathbf{f}}{\partial z}\mathbf{\hat{k}}
+									\end{equation}
+									\begin{equation}
+											f(\zeta) = \int_{-\infty}^{\infty}f(x)e^{-2\pi i x \zeta} dx
+									\end{equation}
+							\item Tables
+									\begin{table}
+									\small
+									\centering
+									\begin{tabular}{llll}
+									\toprule
+									\textbf{Parameter} & \textbf{Texas} & \textbf{Minnesota} \\
+									\midrule
+									Population (mil.) & 27 & 6 \\
+									Median income (thou. \$) & 56 & 68\\
+									\bottomrule
+									\end{tabular}
+									\end{table}
+					\end{itemize}
 				\end{block}
 		\end{column} % Column 4 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column

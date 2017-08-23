@@ -93,7 +93,7 @@ UMNMaroon = "#7a0019" # R:122 G:0 B:25
 
 \title{An example poster using KnitR and LaTeX}
 \author{Daniel Guest}
-\institute{University of Minnesota, Department of Psychology, Auditory Perception and Cognition Lab}
+\institute{University of Somewhere, Department of Something, One of the Labs}
 
 %-----------------------------------------------------------
 % Start the poster
@@ -105,6 +105,7 @@ UMNMaroon = "#7a0019" # R:122 G:0 B:25
 library(dplyr)
 library(ggplot2)
 library(cowplot)
+library(ggjoy)
 @
 
 <<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
@@ -144,15 +145,15 @@ options(digits=2)
 						\begin{itemize}
 							\item The files
 								\begin{itemize}
-									\item beamerthemconfposter.sty --- contains definitions of the title and blocks, as well as colors and theme options
-									\item beamerposter.sty --- provides the beamerposter package
-									\item poster.Rnw --- the source file, which is turned into a .tex file by KnitR
+									\item \texttt{beamerthemconfposter.sty} --- contains definitions of the title and blocks, as well as colors and theme options
+									\item \texttt{beamerposter.sty} --- provides the beamerposter package
+									\item \texttt{poster.Rnw} --- the source file, which is turned into a .tex file by KnitR
 								\end{itemize}
 							\item The source file
 								\begin{itemize}
 							\item The poster is composed of a title and columns, with each column being subdivided into blocks
 							\item Blocks contain the content of the poster, and come in two flavors -- normal (like the first block, ``Introduction'') and alert (like the this block, ``Motivations'')
-							\item R code is delimited by special characters <<>> and @
+							\item R code is delimited by special characters \texttt{<<>>} and \texttt{@}
 								\end{itemize}
 						\end{itemize}
 				\end{block}
@@ -161,7 +162,7 @@ options(digits=2)
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
 				\begin{block}{Some examples}
 				KnitR supports high-quality syntax-highlighting of R (and many other languages), as well as directly including the output of R in the output document
-<<iris_example_1, cache=TRUE>>=
+<<iris_example_1, cache=TRUE, size="tiny">>=
 my_data = iris
 my_summary = my_data %>% group_by(Species) %>% summarize(sepallen=mean(Sepal.Length),
                                                          sepalwid=mean(Sepal.Width),
@@ -171,7 +172,7 @@ my_summary
 @
 
 This functionality includes graphs!
-<<iris_example_2, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth">>=
+<<iris_example_2, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth", size="tiny">>=
 ggplot(my_data, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) + 
      geom_point() + facet_wrap(~Species)
 @
@@ -179,13 +180,48 @@ ggplot(my_data, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) +
 And, there's a variety of options to control whether or not your R code is visible or hidden and the size and characteristics of your output text and/or graphs. For example, here's a graph using the airquality data set in R, but the actual R code that generated the graph hidden in the output document.
 
 <<airquality_example_1, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth", warning=FALSE, echo=FALSE>>=
-ggplot(airquality, aes(x=Temp, y=Ozone, color=as.factor(Month))) + geom_point() 
+ggplot(airquality, aes(x=Temp, y=as.factor(Month))) + geom_joy() 
 @
 				\end{block}
 		\end{column} % Column 2/3 <End>
 		\begin{column}{\sepwid} \end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 4 <Begin>
-				\begin{block}{Conclusions}
+				\begin{block}{Resources}
+					\begin{itemize}
+						\item \url{http://www.personal.kent.edu/~rmuhamma/Systems/latex.html} --- Big collection of \LaTeX{} resources
+						\item \url{https://yihui.name/knitr/} --- overview of KnitR
+						\item \url{https://yihui.name/knitr/options/} --- KnitR options to modify the behavior of R code chunks
+					\end{itemize}
+				\end{block}
+				\begin{block}{An example compilation in Linux}
+<<example_compile, engine="bash", eval=FALSE, size="small">>=
+Rscript -e "library(knitr); knitr('./poster.Rnw')"
+latexmk -pdf poster.tex
+@
+				\end{block}
+				\begin{block}{More examples of nice things \LaTeX{} can do}
+					\begin{itemize}
+							\item Math typesetting
+									\begin{equation}
+											\nabla \mathbf{f} = \frac{\partial\mathbf{f}}{\partial x}\mathbf{\hat{i}} + \frac{\partial\mathbf{f}}{\partial y}\mathbf{\hat{j}} + \frac{\partial\mathbf{f}}{\partial z}\mathbf{\hat{k}}
+									\end{equation}
+									\begin{equation}
+											f(\zeta) = \int_{-\infty}^{\infty}f(x)e^{-2\pi i x \zeta} dx
+									\end{equation}
+							\item Tables
+									\begin{table}
+									\small
+									\centering
+									\begin{tabular}{llll}
+									\toprule
+									\textbf{Parameter} & \textbf{Texas} & \textbf{Minnesota} \\
+									\midrule
+									Population (mil.) & 27 & 6 \\
+									Median income (thou. \$) & 56 & 68\\
+									\bottomrule
+									\end{tabular}
+									\end{table}
+					\end{itemize}
 				\end{block}
 		\end{column} % Column 4 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
