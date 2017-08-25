@@ -7,23 +7,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[capfont, final]{beamer}
-\usepackage[scale=1.20]{beamerposter}
-\usepackage{graphicx} % Importing images  
+\setbeamertemplate{caption}[numbered]
+\usepackage[scale=1.25]{beamerposter}
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
 \usepackage{booktabs} % Better tables
 \usepackage{amsmath} % Better tables
 \usepackage{hyperref} % URLs
 \usepackage[neverdecrease]{paralist} % Control over list indentation
-\usepackage[english]{babel}
-\renewcommand{\figcapfont}{\sf}
-\renewcommand{\tabcapfont}{\Large\sc}
+\usepackage[english]{babel} % English language 
+\usepackage{caption} % Modify caption settings below...
+	\DeclareCaptionFont{serif}{\rmfamily} % Define serif
+	\DeclareCaptionFont{UMNMaroon}{\color{UMNMaroon}} % Define color for label
+	\DeclareCaptionFont{bf}{\bfseries} % Define bold for label
+	\captionsetup{labelfont={UMNMaroon, bf, serif}, textfont={serif}} % Set label to be bold maroon serif, text to be plain serif
 
 %-----------------------------------------------------------
 % Define the column width and poster size
 % To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
-% The separation I chose is 0.024 and I want 4 columns
-% Then set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
+% The separation I chose is 0.024 \paperwidth and I want 4 columns
+% So, I set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
 % Set twocolwid to be 2*onecolwid + sepwid = 0.464
 % Formulae for n columns:
 %	onecolwid = (1/n)*(1-(n+1)*sepwid)
@@ -36,8 +39,8 @@
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
-\setlength{\paperwidth}{48in} 
-\setlength{\paperheight}{36in}
+\setlength{\paperwidth}{48in} % Poster width
+\setlength{\paperheight}{36in} % Poser height
 \setlength{\sepwid}{0.024\paperwidth}
 \setlength{\minisepwid}{0.06\onecolwid}
 \setlength{\onecolwid}{0.22\paperwidth}
@@ -46,22 +49,7 @@
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
 \usepackage{exscale}
-\setdefaultleftmargin{1cm}{2cm}{}{}{}{}
-
-%-----------------------------------------------------------
-% The next part fixes a problem with figure numbering. Thanks Nishan!
-% When including a figure in your poster, be sure that the commands are typed in the following order:
-% \begin{figure}
-% \includegraphics[...]{...}
-% \caption{...}
-% \end{figure}
-% That is, put the \caption after the \includegraphics
-%-----------------------------------------------------------
-
-\usecaptiontemplate{
-\small
-\structure{\insertcaptionname~\insertcaptionnumber:}
-\insertcaption}
+\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indendtation levels for itemize/enumerate
 
 %-----------------------------------------------------------
 % Define colours (see beamerthemeconfposter.sty to change these colour definitions)
@@ -73,7 +61,7 @@
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
 %-----------------------------------------------------------
-% Custom definitions
+% Custom definitions for R
 %-----------------------------------------------------------
 
 <<define_colors, echo=FALSE, cache=TRUE, warning=FALSE>>=
@@ -82,7 +70,7 @@ UMNMaroon = "#7a0019" # R:122 G:0 B:25
 @
 
 %-----------------------------------------------------------
-% Bibliography Stuff
+% Bibliography stuff
 %-----------------------------------------------------------
 
 \usepackage[backend=biber]{biblatex}
@@ -110,7 +98,6 @@ knitr::opts_chunk$set(echo=TRUE, size="small")
 library(dplyr)
 library(ggplot2)
 library(cowplot)
-library(ggjoy)
 @
 
 <<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
@@ -140,11 +127,11 @@ options(digits=2)
 						\begin{itemize}
 							\item Why use \LaTeX{} to make a poster? What advantages does it offer over PowerPoint or other alternatives?
 								\begin{itemize}
-										\item LaTeX{} emphasizes a clear separation of content from form, allowing you to focus on the ``what'' rather than the ``how'' 
-										\item KnitR allows for syntax-highlighted R code, or the output of R code, to be included directly in the poster 
-										\item LaTeX{} has great tools for high-quality typesetting of math, like $\int 2x^2 dx$
+										\item LaTeX{} emphasizes a clear separation of content and form, allowing you to focus on the ``what'' rather than the ``how'' 
+										\item LaTeX{} has easy, high-quality math typesetting 
 										\item Bibliography systems like biblatex make managing citations and including them in your poster easy
 										\item If there's something unique you need to be able to do (like write International Phonetic Alphabet, or draw diagrams), you can likely extend \LaTeX{} through packages to do so
+										\item KnitR, an R package, allows the results of R code to be included directly in the poster 
 								\end{itemize}
 						\end{itemize}
 				\end{alertblock}
@@ -168,14 +155,38 @@ options(digits=2)
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
 				\begin{block}{Some examples}
-					KnitR enables us to directly output figures and plots generated in R into the poster. The R source code is stored in \texttt{poster.Rnw}, so it's easy to change at any time or return to for later reference. And, there's a variety of options to control the size, scale, and characteristics of your figures. 
+					KnitR enables us to directly output figures and plots generated in R into the poster. The R source code is stored in \texttt{poster.Rnw}, so it's easy to change at any time or return to for later reference. And, there's a variety of options to control the size, scale, and characteristics of your figures. Here's a few examples using the \texttt{iris} dataset in R
 
 \begin{figure}
-<<iris_example_2, cache=TRUE, fig.width=10, fig.asp=0.33, out.width="\\linewidth", echo=FALSE>>=
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) + 
-     geom_point() + facet_wrap(~Species)
+<<iris_example_1, cache=TRUE, fig.width=10, fig.asp=0.3, out.width="\\linewidth", echo=FALSE>>=
+plot1 = ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) + geom_point() + facet_wrap(~Species)
+plot1 = plot1 + xlab("Sepal Length") + ylab("Sepal Width") + scale_color_continuous(name="Petal Length")
+plot1
 @
-		\caption{One two three}
+\caption{Sepal width versus sepal length, with color indicating petal length. Each panel shows a different species.}
+\label{fig:iris_example_1}
+\end{figure}
+
+\begin{figure}
+<<iris_example_2, cache=TRUE, echo=FALSE, fig.width=10, fig.asp=0.3, out.width="\\linewidth">>=
+plot2 = ggplot(iris, aes(x=Petal.Width, fill=Species)) + geom_density()
+plot2 = plot2 + xlab("Petal Width") + ylab("Density")
+plot2
+@
+\caption{Density plots of petal width, with each species shown in a different color}
+\label{fig:iris_example_2}
+\end{figure}
+
+And here are some more examples using the \texttt{diamonds} data set from \texttt{ggplot}:
+
+\begin{figure}
+<<diamonds_example_1, cache=TRUE, echo=FALSE, fig.width=10, fig.asp=0.3, out.width="\\linewidth">>=
+plot3 = ggplot(diamonds, aes(x=carat, y=price, color=color)) + geom_point()
+plot3 = plot3 + xlab("Carat") + ylab("Price ($)") + scale_color_discrete(name="Color")
+plot3
+@
+\caption{Diamond sale price versus carat (i.e., weight). Dot color indicates different diamond color ratings, from J (worst) to D (best).}
+\label{fig:diamonds_example_1}
 \end{figure}
 
 				\end{block}
@@ -189,7 +200,7 @@ ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Petal.Length)) +
 						\item \url{https://yihui.name/knitr/options/} --- KnitR options to modify the behavior of R code chunks
 					\end{itemize}
 				\end{block}
-				\begin{block}{An example compilation in Linux}
+				\begin{block}{An example compilation in Bash}
 <<example_compile, engine="bash", eval=FALSE, size="small">>=
 cd /where/the/poster/dir/is
 Rscript -e "library(knitr); knitr('./poster.Rnw')"
@@ -228,7 +239,7 @@ latexmk -pdf poster.tex
 										\item You can change easily between citation styles with single commands (almost all types are supported)
 										\item And then you can print out your bibliography: 
 									\end{itemize}
-							\renewcommand*{\bibfont}{\small}
+							\renewcommand*{\bibfont}{\footnotesize}
 							\nocite{*}	
 							\printbibliography
 					\end{itemize}
