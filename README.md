@@ -9,7 +9,7 @@ Files
 =====
 
 ``bibliography.bib`` &mdash; sample bibliography written in biblatex style   
-``beamerposter.sty`` &mdash; beamerposter package 
+``beamerposter.sty`` &mdash; beamerposter package   
 ``beamerthemeconfposter.sty`` &mdash; theme for beamerposter, contains most color and block definitions   
 ``blank.Rnw`` &mdash; source file for blank poster (i.e., has no example content)   
 ``blank.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw`` source and ``.pdf`` output for blank poster   
