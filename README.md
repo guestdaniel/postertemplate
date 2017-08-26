@@ -3,7 +3,7 @@ Summary
 
 This repo contains a number of files which will help users create posters using LaTeX and KnitR. 
 
-With questions, please contact Daniel Guest at guest121@umn.edu
+With questions, please contact Daniel Guest at guest121@umn.edu.
 
 Files
 =====
@@ -12,10 +12,10 @@ Files
 ``beamerposter.sty`` &mdash; beamerposter package   
 ``beamerthemeconfposter.sty`` &mdash; theme for beamerposter, contains most color and block definitions   
 ``blank.Rnw`` &mdash; source file for blank poster (i.e., has no example content)   
-``blank.tex`` &mdash; intermediary .tex file between .Rnw source and .pdf output for blank poster   
+``blank.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw`` source and ``.pdf`` output for blank poster   
 ``blank.pdf`` &mdash; output document for blank poster   
 ``poster.Rnw`` &mdash; source file for example poster   
-``poster.tex`` &mdash; intermediary .tex file between .Rnw source and .pdf output for example poster   
+``poster.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw source`` and ``.pdf`` output for example poster   
 ``poster.pdf`` &mdash; output document for example poster   
 
 How To Use It
