@@ -93,7 +93,6 @@
 \begin{document}
 
 <<packages, cache=TRUE, message=FALSE, echo=FALSE, warning=FALSE, results='hide'>>=
-library(dplyr)
 library(ggplot2)
 library(cowplot)
 @
