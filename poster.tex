@@ -2,7 +2,7 @@
 % KnitR Poster Template
 % Daniel Guest 
 % Updated September 2017
-% Adapted from template from Nathaniel Johnston for use with KnitR...
+% Adapted from template by Nathaniel Johnston for use with KnitR...
 %	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -126,7 +126,8 @@
 % Bibliography stuff
 %-----------------------------------------------------------
 
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber,
+		    style=authoryear]{biblatex}
 \bibliography{bibliography} 
 
 %-----------------------------------------------------------
@@ -135,17 +136,13 @@
 
 \title{An example poster using KnitR and LaTeX}
 \author{Daniel Guest}
-\institute{University of Somewhere, Department of Something, One of the Labs}
+\institute{University of Minnesota, Department of Psychology, Auditory Perception and Cognition Lab}
 
 %-----------------------------------------------------------
 % Start the poster
 %-----------------------------------------------------------
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-
-
-
-
 
 
 
@@ -201,7 +198,7 @@
 					KnitR enables us to directly output figures and plots generated in R into the poster. The R source code is stored in \texttt{poster.Rnw}, so it's easy to change at any time or return to for later reference. And, there's a variety of options to control the size, scale, and characteristics of your figures. Here's a few examples using the \texttt{iris} dataset in R
 
 \begin{figure}
-\begin{knitrout}\small
+\begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\linewidth]{figure/iris_example_1-1} 
 
@@ -211,7 +208,7 @@
 \end{figure}
 
 \begin{figure}
-\begin{knitrout}\small
+\begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\linewidth]{figure/iris_example_2-1} 
 
@@ -223,7 +220,7 @@
 And here are some more examples using the \texttt{diamonds} data set from \texttt{ggplot}:
 
 \begin{figure}
-\begin{knitrout}\small
+\begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\linewidth]{figure/diamonds_example_1-1} 
 
@@ -238,9 +235,15 @@ And here are some more examples using the \texttt{diamonds} data set from \textt
 		\begin{column}{\onecolwid} % Column 4 <Begin>
 				\begin{block}{Resources}
 					\begin{itemize}
-						\item \url{http://www.personal.kent.edu/~rmuhamma/Systems/latex.html} --- Big collection of \LaTeX{} resources
-						\item \url{https://yihui.name/knitr/} --- overview of KnitR
-						\item \url{https://yihui.name/knitr/options/} --- KnitR options to modify the behavior of R code chunks
+						\item \LaTeX{} resources
+						\begin{itemize}
+							\item \url{http://math.ucr.edu/~huerta/latexforbeginners.html} --- A guide for brand-new users
+							\item \url{http://www.personal.kent.edu/~rmuhamma/Systems/latex.html} --- Big collection of \LaTeX{} resources
+						\end{itemize}
+						\item KnitR resources 
+						\begin{itemize}
+								\item \url{https://yihui.name/knitr/} --- overview of KnitR
+						\end{itemize}
 					\end{itemize}
 				\end{block}
 				\begin{block}{An example compilation in Bash}
@@ -284,14 +287,16 @@ latexmk\ }\hlopt{{-}}\hlstd{pdf\ poster.tex}\hspace*{\fill}
 							\item Automated bibliographies
 									\begin{itemize}
 										\item You can cite sources inline: \textcite{Ashmore1991} 
-										\item You can also cite sources parenthetically \autocite{Shamma2000}
+										\item You can also cite sources parenthetically \autocite{Shamma2000, Dreyer2006}
 										\item You can change easily between citation styles with single commands (almost all types are supported)
-										\item And then you can print out your bibliography: 
+										\item And then you can print out your bibliography as below
 									\end{itemize}
+					\end{itemize}
+				\end{block}
+				\begin{block}{References}
 							\renewcommand*{\bibfont}{\footnotesize}
 							\nocite{*}	
 							\printbibliography
-					\end{itemize}
 				\end{block}
 		\end{column} % Column 4 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
