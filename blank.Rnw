@@ -6,6 +6,7 @@
 %	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% You may not need everything below --- these are just personal preferences and/or commonly used packages
 \documentclass[capfont, final]{beamer}
 \usepackage[scale=1.25]{beamerposter}
 \usepackage{tabularx} % Better tables
