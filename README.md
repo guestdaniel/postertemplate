@@ -8,23 +8,11 @@ With questions, please contact Daniel Guest at guest121@umn.edu.
 Requirements
 ============
 
-In order to compile this poster, you'll need (at least):
+In order to compile this poster, you'll need LaTeX and R. 
 
-1. LaTeX
-2. R
-3. KnitR
+You'll also need the R packages ggplot2, cowplot, and KnitR.
 
-You'll also need the R packages:
-
-1. ggplot2
-3. cowplot
-
-You'll also some LateX packages which should be included with any full install as well as:
-
-1. biblatex
-2. biber
-
-If you don't want to deal with biblatex and biber, you can remove the bibliography portions of the poster. 
+You'll also some common LateX packages (specified in the preamble) as well as the somewhat less common biblatex and biber. If you don't want to deal with biblatex and biber, you can remove the bibliography portions of the poster. 
 
 Files
 =====
