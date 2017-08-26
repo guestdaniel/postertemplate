@@ -6,5 +6,5 @@ This repo contains a number of files which will help users create posters using 
 Files
 =====
 
-``poster.Rnw'' &mdash; source file for poster   
-``poster.pdf'' &mdash; output document
+``poster.Rnw`` &mdash; source file for poster   
+``poster.pdf`` &mdash; output document
