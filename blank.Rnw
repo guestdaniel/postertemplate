@@ -2,7 +2,7 @@
 % KnitR Poster Template
 % Daniel Guest 
 % Updated September 2017
-% Adapted from template from Nathaniel Johnston for use with KnitR...
+% Adapted from template by Nathaniel Johnston for use with KnitR...
 %	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -35,14 +35,12 @@
 %-----------------------------------------------------------
 
 \newlength{\sepwid}
-\newlength{\minisepwid}
 \newlength{\onecolwid}
 \newlength{\twocolwid}
 \newlength{\threecolwid}
 \setlength{\paperwidth}{48in} % Poster width
 \setlength{\paperheight}{36in} % Poser height
 \setlength{\sepwid}{0.024\paperwidth}
-\setlength{\minisepwid}{0.06\onecolwid}
 \setlength{\onecolwid}{0.22\paperwidth}
 \setlength{\twocolwid}{0.464\paperwidth}
 \setlength{\threecolwid}{0.708\paperwidth}
@@ -52,37 +50,40 @@
 \setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indentation levels for itemize/enumerate
 
 %-----------------------------------------------------------
-% Define main colors 
+% Set main colors (overwrites defaults in beamerthemeconfposter.sty
 %-----------------------------------------------------------
 
+% Block colors
 \setbeamercolor{block title}{fg=UMNMaroon,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
 \setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon!70}
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
-%-----------------------------------------------------------
-% Custom color definitions for use in R
-%-----------------------------------------------------------
+% Itemize colors
+\setbeamercolor{item}{fg=UMNMaroon}
+\setbeamercolor{item projected}{fg=white,bg=UMNMaroon}
 
-<<define_colors, echo=FALSE, cache=TRUE, warning=FALSE>>=
-UMNGold = "#ffcc33" # R:225 G:204 B:51
-UMNMaroon = "#7a0019" # R:122 G:0 B:25
-@
+% Title colors
+\setbeamercolor{title in headline}{fg=UMNMaroon, bg=white}
+\setbeamercolor{author in headline}{fg=warmgray8, bg=white}
+\setbeamercolor{institute in headline}{fg=warmgray8, bg=white}
+\setbeamercolor{cboxb}{fg=black,bg=UMNMaroon} % bg sets title/content separation bar color
 
 %-----------------------------------------------------------
 % Bibliography stuff
 %-----------------------------------------------------------
 
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber,
+		    style=authoryear]{biblatex}
 \bibliography{bibliography} 
 
 %-----------------------------------------------------------
 % Name and authors
 %-----------------------------------------------------------
 
-\title{An example poster using KnitR and LaTeX}
-\author{Daniel Guest}
-\institute{University of Somewhere, Department of Something, One of the Labs}
+\title{A title}
+\author{An Author}
+\institute{University of Somewhere, Department of Something, Some Lab}
 
 %-----------------------------------------------------------
 % Start the poster
@@ -96,12 +97,8 @@ library(ggplot2)
 library(cowplot)
 @
 
-<<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
-# R code to import data here 
-@
-
 <<set_digits, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE>>=
-options(digits=2) # How many digits do you want in R output?
+options(digits=2)
 @
 
 \begin{frame}[t, fragile]
