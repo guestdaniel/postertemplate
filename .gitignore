@@ -12,5 +12,6 @@
 *.snm
 *.toc
 *.vrb
+*.swp
 cache/
 figure/
