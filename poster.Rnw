@@ -7,7 +7,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[capfont, final]{beamer}
-\setbeamertemplate{caption}[numbered]
 \usepackage[scale=1.25]{beamerposter}
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
@@ -16,6 +15,7 @@
 \usepackage{hyperref} % URLs
 \usepackage[neverdecrease]{paralist} % Control over list indentation
 \usepackage[english]{babel} % English language 
+\setbeamertemplate{caption}[numbered] % Add numbers to captions
 \usepackage{caption} % Modify caption settings below...
 	\DeclareCaptionFont{serif}{\rmfamily} % Define serif
 	\DeclareCaptionFont{UMNMaroon}{\color{UMNMaroon}} % Define color for label
@@ -49,10 +49,10 @@
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
 \usepackage{exscale}
-\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indendtation levels for itemize/enumerate
+\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indentation levels for itemize/enumerate
 
 %-----------------------------------------------------------
-% Define colours (see beamerthemeconfposter.sty to change these colour definitions)
+% Define main colors 
 %-----------------------------------------------------------
 
 \setbeamercolor{block title}{fg=UMNMaroon,bg=white}
@@ -61,7 +61,7 @@
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
 %-----------------------------------------------------------
-% Custom definitions for R
+% Custom color definitions for use in R
 %-----------------------------------------------------------
 
 <<define_colors, echo=FALSE, cache=TRUE, warning=FALSE>>=

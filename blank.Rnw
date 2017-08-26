@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% KnitR Poster Template
+% Daniel Guest 
+% Updated September 2017
+% Adapted from template from Nathaniel Johnston for use with KnitR...
+%	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[capfont, final]{beamer}
+\usepackage[scale=1.25]{beamerposter}
+\usepackage{tabularx} % Better tables
+\usepackage{float} % Floats, obviously
+\usepackage{booktabs} % Better tables
+\usepackage{amsmath} % Better tables
+\usepackage{hyperref} % URLs
+\usepackage[neverdecrease]{paralist} % Control over list indentation
+\usepackage[english]{babel} % English language 
+\setbeamertemplate{caption}[numbered] % Add numbers to captions
+\usepackage{caption} % Modify caption settings below...
+	\DeclareCaptionFont{serif}{\rmfamily} % Define serif
+	\DeclareCaptionFont{UMNMaroon}{\color{UMNMaroon}} % Define color for label
+	\DeclareCaptionFont{bf}{\bfseries} % Define bold for label
+	\captionsetup{labelfont={UMNMaroon, bf, serif}, textfont={serif}} % Set label to be bold maroon serif, text to be plain serif
+
+%-----------------------------------------------------------
+% Define the column width and poster size
+% To set effective sepwid, onecolwid and twocolwid values, first choose how many columns you want and how much separation you want between columns
+% The separation I chose is 0.024 \paperwidth and I want 4 columns
+% So, I set onecolwid to be (1-(4+1)*0.024)/4 = 0.22
+% Set twocolwid to be 2*onecolwid + sepwid = 0.464
+% Formulae for n columns:
+%	onecolwid = (1/n)*(1-(n+1)*sepwid)
+%   twocolwid = 2*onecolwid + sepwid
+%   threecolwid = 3*onecolwid + 2*sepwid
+%-----------------------------------------------------------
+
+\newlength{\sepwid}
+\newlength{\minisepwid}
+\newlength{\onecolwid}
+\newlength{\twocolwid}
+\newlength{\threecolwid}
+\setlength{\paperwidth}{48in} % Poster width
+\setlength{\paperheight}{36in} % Poser height
+\setlength{\sepwid}{0.024\paperwidth}
+\setlength{\minisepwid}{0.06\onecolwid}
+\setlength{\onecolwid}{0.22\paperwidth}
+\setlength{\twocolwid}{0.464\paperwidth}
+\setlength{\threecolwid}{0.708\paperwidth}
+\setlength{\topmargin}{-0.5in}
+\usetheme{confposter}
+\usepackage{exscale}
+\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indentation levels for itemize/enumerate
+
+%-----------------------------------------------------------
+% Define main colors 
+%-----------------------------------------------------------
+
+\setbeamercolor{block title}{fg=UMNMaroon,bg=white}
+\setbeamercolor{block body}{fg=black,bg=white}
+\setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon!70}
+\setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
+
+%-----------------------------------------------------------
+% Custom color definitions for use in R
+%-----------------------------------------------------------
+
+<<define_colors, echo=FALSE, cache=TRUE, warning=FALSE>>=
+UMNGold = "#ffcc33" # R:225 G:204 B:51
+UMNMaroon = "#7a0019" # R:122 G:0 B:25
+@
+
+%-----------------------------------------------------------
+% Bibliography stuff
+%-----------------------------------------------------------
+
+\usepackage[backend=biber]{biblatex}
+\bibliography{bibliography} 
+
+%-----------------------------------------------------------
+% Name and authors
+%-----------------------------------------------------------
+
+\title{An example poster using KnitR and LaTeX}
+\author{Daniel Guest}
+\institute{University of Somewhere, Department of Something, One of the Labs}
+
+%-----------------------------------------------------------
+% Start the poster
+%-----------------------------------------------------------
+
+\begin{document}
+
+<<packages, cache=TRUE, message=FALSE, echo=FALSE, warning=FALSE, results='hide'>>=
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+@
+
+<<import_data, echo=FALSE, cache=TRUE, warning=FALSE>>=
+# R code to import data here 
+@
+
+<<set_digits, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE>>=
+options(digits=2) # How many digits do you want in R output?
+@
+
+\begin{frame}[t, fragile]
+	\begin{columns}[T] % Overall <Begin>
+		\begin{column}{\sepwid}\end{column} % Spacer column
+		\begin{column}{\onecolwid} % Column 1 <Begin>
+		\end{column} % Column 1 <End>
+		\begin{column}{\sepwid}\end{column} % Spacer column
+		\begin{column}{\twocolwid} % Column 2/3 <Begin>
+		\end{column} % Column 2/3 <End>
+		\begin{column}{\sepwid} \end{column} % Spacer column
+		\begin{column}{\onecolwid} % Column 4 <Begin>
+		\end{column} % Column 4 <End>
+		\begin{column}{\sepwid}\end{column} % Spacer column
+	\end{columns} % Overall <End>
+\end{frame}
+\end{document}
