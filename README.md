@@ -30,7 +30,7 @@ latexmk -pdf poster.tex
 ```
 
 As is quite obvious, the example poster is styled to match the University of Minnesota's color scheme, but this is easy to change via the following steps:
-1. Open ``beamerthemeconfposter.sty`` in a text editor and find "UNIVERSITY OF MINNESOTA COLORS".
-2. Replace the colors with your own choices, or add new definitions of your own colors.
-3. Replace every instance of UMNMaroon in ``beamerthemeconfposter.sty`` and ``poster.Rnw`` with your new colors as you see fit. In most places that use color names, it should be clear what the color is being used for.
+1. A variety of colors are already defined in ``beamerthemeconfposter.sty``. Open ``beamerthemeconfposter.sty`` in a text editor and find "UNIVERSITY OF MINNESOTA COLORS".
+2. Add new definitions of your own colors in the same format, or find existing color definitions which suit you. 
+3. Replace every instance of UMNMaroon in ``poster.Rnw`` with your new colors as you see fit. In most places that use color names, it should be clear what the color is being used for. Changes made in ``poster.Rnw`` overwrite defaults in ``beamerthemeconfposter.sty``. 
 4. Add your own logo into the poster directory, and replace "umnlogotemp" with the name of your logo file in ``beamerthemeconfposter.sty``

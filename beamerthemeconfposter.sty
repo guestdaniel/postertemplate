@@ -151,12 +151,12 @@
 \setbeamercolor{structure}{fg=jblue}
 \setbeamercolor{titlelike}         {bg=jblue,fg=white}
 \setbeamercolor{frametitle}        {bg=jblue!10,fg=jblue}
-\setbeamercolor{cboxb}{fg=black,bg=UMNMaroon}
+\setbeamercolor{cboxb}{fg=black,bg=blue}
 \setbeamercolor{cboxr}{fg=black,bg=red}
 
 % Set colors for itemize/enumerate
-\setbeamercolor{item}{fg=UMNMaroon}
-\setbeamercolor{item projected}{fg=white,bg=UMNMaroon}
+\setbeamercolor{item}{fg=black}
+\setbeamercolor{item projected}{fg=white,bg=black}
 
 % Set colors for regular blocks
 \setbeamercolor{block title}{fg=ngreen,bg=white}
@@ -165,6 +165,11 @@
 % Set colors for alert blocks
 \setbeamercolor{block alerted title}{fg=white,bg=jblue}
 \setbeamercolor{block alerted body}{fg=black,bg=jblue!10}
+
+% Set colors for title
+\setbeamercolor{title in headline}{fg=jblue, bg=white}
+\setbeamercolor{author in headline}{fg=black, bg=white}
+\setbeamercolor{institute in headline}{fg=black, bg=white}
 
 % Set fonts
 \setbeamerfont{section in head/foot}{series=\bfseries}
@@ -199,7 +204,8 @@
 %--------------------------------------------------------
 
 \newlength{\barlength}
-\setlength{\barlength}{47in}
+\setlength{\barlength}{\paperwidth}
+\addtolength{\barlength}{-1in}
 \setbeamertemplate{headline}{
 	\leavevmode
 	\begin{columns}
@@ -210,9 +216,9 @@
 		\begin{column}{\sepwid} \end{column}
         \begin{column}{\threecolwid}
 			\vskip1cm
-			\usebeamercolor{title in headline}{\color{UMNMaroon}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
-			\usebeamercolor{author in headline}{\color{warmgray8}\Large{\insertauthor}\\[1ex]}
-			\usebeamercolor{institute in headline}{\color{warmgray8}\large{\insertinstitute}\\[1ex]}
+			{\usebeamercolor[fg]{title in headline}\Huge{\textbf{\inserttitle}}\\[0.5ex]}
+			{\usebeamercolor[fg]{author in headline}{\Large{\insertauthor}\\[1ex]}}
+			{\usebeamercolor[fg]{institute in headline}{\large{\insertinstitute}\\[1ex]}}
 			\vskip1cm
 		\end{column}
 		\begin{column}{\sepwid} \end{column}

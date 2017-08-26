@@ -58,7 +58,6 @@
 
 \let\hlesc\hlstd \let\hlpps\hlstd \let\hllin\hlstd \let\hlslc\hlcom \let\hlppc\hlcom
 \usepackage{alltt}
-\setbeamertemplate{caption}[numbered]
 \usepackage[scale=1.25]{beamerposter}
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
@@ -67,6 +66,7 @@
 \usepackage{hyperref} % URLs
 \usepackage[neverdecrease]{paralist} % Control over list indentation
 \usepackage[english]{babel} % English language 
+\setbeamertemplate{caption}[numbered] % Add numbers to captions
 \usepackage{caption} % Modify caption settings below...
 	\DeclareCaptionFont{serif}{\rmfamily} % Define serif
 	\DeclareCaptionFont{UMNMaroon}{\color{UMNMaroon}} % Define color for label
@@ -100,22 +100,27 @@
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
 \usepackage{exscale}
-\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indendtation levels for itemize/enumerate
+\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indentation levels for itemize/enumerate
 
 %-----------------------------------------------------------
-% Define colours (see beamerthemeconfposter.sty to change these colour definitions)
+% Set main colors (overwrites defaults in beamerthemeconfposter.sty
 %-----------------------------------------------------------
 
+% Block colors
 \setbeamercolor{block title}{fg=UMNMaroon,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
 \setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon!70}
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
-%-----------------------------------------------------------
-% Custom definitions for R
-%-----------------------------------------------------------
+% Itemize colors
+\setbeamercolor{item}{fg=UMNMaroon}
+\setbeamercolor{item projected}{fg=white,bg=UMNMaroon}
 
-
+% Title colors
+\setbeamercolor{title in headline}{fg=UMNMaroon, bg=white}
+\setbeamercolor{author in headline}{fg=warmgray8, bg=white}
+\setbeamercolor{institute in headline}{fg=warmgray8, bg=white}
+\setbeamercolor{cboxb}{fg=black,bg=UMNMaroon} % bg sets title/content separation bar color
 
 %-----------------------------------------------------------
 % Bibliography stuff
