@@ -24,7 +24,7 @@ Files
 ``blank.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw`` source and ``.pdf`` output for blank poster   
 ``blank.pdf`` &mdash; output document for blank poster   
 ``poster.Rnw`` &mdash; source file for example poster   
-``poster.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw source`` and ``.pdf`` output for example poster   
+``poster.tex`` &mdash; intermediary ``.tex`` file between ``.Rnw`` source and ``.pdf`` output for example poster   
 ``poster.pdf`` &mdash; output document for example poster   
 
 How To Use It
@@ -32,7 +32,7 @@ How To Use It
 
 *Compilation*
 
-The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by KnitR. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). Below, I've provided an example of how to perform this compilation manually in Bash. R Studio has features to perform these steps automatically! 
+The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by KnitR. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). R Studio has features to perform these steps automatically! If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and KnitR work. Below, I've provided an example of how to perform this compilation manually in Bash.
 
 ```bash
 cd /where/the/poster/dir/is
