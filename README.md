@@ -32,13 +32,15 @@ How To Use It
 
 *Compilation*
 
-The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by KnitR. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). R Studio has features to perform these steps automatically! If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and KnitR work. Below, I've provided an example of how to perform this compilation manually in Bash.
+The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by KnitR. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and KnitR work. Below, I've provided an example of how to perform this compilation manually in Bash.
 
 ```bash
 cd /where/the/poster/dir/is
 Rscript -e "library(knitr); knitr('./poster.Rnw')"
 latexmk -pdf poster.tex
 ```
+
+RStudio can also can do all of this for you! Look [here](https://support.rstudio.com/hc/en-us/articles/200552056-Using-Sweave-and-knitr) and [here](https://yihui.name/knitr/demo/rstudio/) for more info about how to use RStudio with KnitR. 
 
 *Change the colors and logo*
 
