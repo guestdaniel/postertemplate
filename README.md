@@ -1,14 +1,14 @@
 Summary
 =======
 
-This repository contains a set of files to help users create posters for psychology conferences using LaTeX and KnitR. LaTeX and KnitR are a powerful combination which allows the creation of posters which are elegant, replicable, and easy to edit and adapt. Moreover, all of the tools involved are open source and free. 
+This repository contains a set of files to help users create posters for psychology conferences using LaTeX and knitr. LaTeX and knitr are a powerful combination. Together, they allow the creation of posters which are elegant, replicable, and easy to edit and adapt. Moreover, all of the tools involved are open source and free. 
 
 With questions, please contact Daniel Guest at guest121@umn.edu.
 
 Introduction
 ============
 
-This poster template assumes some familiarity with LaTeX, R, and KnitR. If you're not sure what some of these things are, read through the links below to familiarize yourself:
+This poster template assumes some familiarity with LaTeX, R, and knitr. If you're not sure what some of these things are, the links below provide some great tutorials and resources to learn more about them. 
 
 *LaTeX*
 - [Getting Started with LaTeX](https://www.maths.tcd.ie/~dwilkins/LaTeXPrimer/)
@@ -18,18 +18,16 @@ This poster template assumes some familiarity with LaTeX, R, and KnitR. If you'r
 - [Getting started with R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R)
 - [R: Getting started with R](http://scs.math.yorku.ca/index.php/R:_Getting_started_with_R)
 
-*KnitR*
-- [KnitR](https://yihui.name/knitr/)
+*knitr*
+- [knitr](https://yihui.name/knitr/)
 - [A Beginner's Tutorial for knitr](https://joshldavis.com/2014/04/12/beginners-tutorial-for-knitr/)
 
 Requirements
 ============
 
-In order to compile this poster, you'll need LaTeX and R. 
-
-You'll also need the R packages ggplot2, cowplot, and KnitR.
-
-You'll also some common LateX packages (specified in the preamble) as well as the somewhat less common biblatex and biber. If you don't want to deal with biblatex and biber, you can remove the bibliography portions of the poster. 
+- LaTeX, with a number of common packages installed (see ``.Rnw`` file preambles)
+- R, with ggplot2, cowplot, and knitr installed 
+- biber, if you want bibliography support 
 
 Files
 =====
@@ -49,7 +47,7 @@ How To Use It
 
 *Compilation*
 
-The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by KnitR. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and KnitR work. Below, I've provided an example of how to perform this compilation manually in Bash.
+The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by knitr. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and knitr work. Below, I've provided an example of how to perform this compilation manually in Bash.
 
 ```bash
 cd /where/the/poster/dir/is
@@ -57,7 +55,7 @@ Rscript -e "library(knitr); knitr('./poster.Rnw')"
 latexmk -pdf poster.tex
 ```
 
-RStudio can also can do all of this for you! Look [here](https://support.rstudio.com/hc/en-us/articles/200552056-Using-Sweave-and-knitr) and [here](https://yihui.name/knitr/demo/rstudio/) for more info about how to use RStudio with KnitR. 
+RStudio can also can do all of this for you! Look [here](https://support.rstudio.com/hc/en-us/articles/200552056-Using-Sweave-and-knitr) and [here](https://yihui.name/knitr/demo/rstudio/) for more info about how to use RStudio with knitr. 
 
 *Change the colors and logo*
 
