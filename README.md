@@ -3,6 +3,8 @@ Summary
 
 This repository contains a set of files to help users create posters for psychology conferences using LaTeX and knitr. LaTeX and knitr are a powerful combination. Together, they allow the creation of posters which are elegant, replicable, and easy to edit and adapt. Moreover, all of the tools involved are open source and free. 
 
+A huge thank you to the creators of beamerposter, to Nathaniel Johnson, and to the Computational Physics and Biophysics Group at Jacobs University. Much of the material in this repository is sourced directly from them with only small modifications.
+
 With questions, please contact Daniel Guest at guest121@umn.edu.
 
 Introduction
@@ -47,7 +49,7 @@ How To Use It
 
 *Compilation*
 
-The poster is written in a combination of LaTeX and R code, with the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by knitr. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). If you have no idea what any of this means, some of the links in the "Resources" section of the poster in ``poster.pdf`` can introduce you to how LaTeX and knitr work. Below, I've provided an example of how to perform this compilation manually in Bash.
+The poster is written in a combination of LaTeX and R code in the source file ``poster.Rnw``. Changes to this file must first be knitted into a ``.tex`` file by knitr. Then, the resulting ``.tex`` file must then be compiled into a ``.pdf`` file (or another output file of your choosing). Below, I've provided an example of how to perform this compilation manually in Bash.
 
 ```bash
 cd /where/the/poster/dir/is
@@ -59,7 +61,7 @@ RStudio can also can do all of this for you! Look [here](https://support.rstudio
 
 *Change the colors and logo*
 
-As is quite obvious, the example poster is styled to match the University of Minnesota's color scheme, but this is easy to change via the following steps:
+As is quite obvious, the example poster is styled to match the University of Minnesota's color scheme, but this is easy to change:
 1. A variety of colors are already defined in ``beamerthemeconfposter.sty``. Open ``beamerthemeconfposter.sty`` in a text editor and find "UNIVERSITY OF MINNESOTA COLORS".
 2. Add new definitions of your own colors in the same format, or find existing color definitions which suit you. 
 3. Replace every instance of UMNMaroon in ``poster.Rnw`` with your new colors as you see fit. In most places that use color names, it should be clear what the color is being used for. Changes made in ``poster.Rnw`` overwrite defaults in ``beamerthemeconfposter.sty``. 
