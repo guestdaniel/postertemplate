@@ -1,9 +1,26 @@
 Summary
 =======
 
-This repo contains a number of files which will help users create posters using LaTeX and KnitR. 
+This repository contains a set of files to help users create posters for psychology conferences using LaTeX and KnitR. LaTeX and KnitR are a powerful combination which allows the creation of posters which are elegant, replicable, and easy to edit and adapt. Moreover, all of the tools involved are open source and free. 
 
 With questions, please contact Daniel Guest at guest121@umn.edu.
+
+Introduction
+============
+
+This poster template assumes some familiarity with LaTeX, R, and KnitR. If you're not sure what some of these things are, read through the links below to familiarize yourself:
+
+*LaTeX*
+- [Getting Started with LaTeX](https://www.maths.tcd.ie/~dwilkins/LaTeXPrimer/)
+- [Getting started with TeX, LaTeX, and friends](https://www.tug.org/begin.html)
+
+*R*
+- [Getting started with R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R)
+- [R: Getting started with R](http://scs.math.yorku.ca/index.php/R:_Getting_started_with_R)
+
+*KnitR*
+- [KnitR](https://yihui.name/knitr/)
+- [A Beginner's Tutorial for knitr](https://joshldavis.com/2014/04/12/beginners-tutorial-for-knitr/)
 
 Requirements
 ============
