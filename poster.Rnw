@@ -6,6 +6,7 @@
 %	- http://www.nathanieljohnston.com/2009/08/latex-poster-template/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\PassOptionsToPackage{rgb}{xcolor} % switch rgb -> cmyk and proof before printing
 \documentclass[capfont, final]{beamer}
 \usepackage[scale=1.25]{beamerposter}
 \usepackage{tabularx} % Better tables
