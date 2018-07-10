@@ -57,7 +57,7 @@
 % Block colors
 \setbeamercolor{block title}{fg=UMNMaroon,bg=white}
 \setbeamercolor{block body}{fg=black,bg=white}
-\setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon!70}
+\setbeamercolor{block alerted title}{fg=UMNGold!10,bg=UMNMaroon}
 \setbeamercolor{block alerted body}{fg=black,bg=UMNGold!10}
 
 % Itemize colors

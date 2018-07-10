@@ -69,9 +69,11 @@ As is quite obvious, the example poster is styled to match the University of Min
 
 *Change the poster size*
 
-To change the poster's size, simply change the sizes specified in ``poster.Rnw``:
+To change the poster's size, you need to do two things. First, change the LaTeX lengths specified in ``poster.Rnw``:
 1. The line ``\setlength{\paperwidth}{48in}`` controls the paper width
 2. The line ``\setlength{\paperheight}{36in}`` controls the paper height
+
+Second, change the ``\usepackage{beamerposter}`` call to include your new sizes (in cm). That is, ``\usepackage[scale=1.25]{beamerposter}`` should become ``\usepackage[size=custom, width=x, height=y, scale=1.25]{beamerposter}`` where x and y are your new sizes in cm.
 
 You can specify sizes in other units as well (such as cm or pt). 
 
