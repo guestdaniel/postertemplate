@@ -58,7 +58,7 @@
 \newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \usepackage{alltt}
-\usepackage[scale=1]{beamerposter}
+\usepackage[size=custom, width=121.68, height=91.44, scale=1]{beamerposter}
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
 \usepackage{booktabs} % Better tables
@@ -71,6 +71,7 @@
 	\DeclareCaptionFont{UMNMaroon}{\color{UMNMaroon}} % Define color for label
 	\DeclareCaptionFont{bf}{\bfseries} % Define bold for label
 	\captionsetup{labelfont={UMNMaroon, bf, serif}, textfont={serif}} % Set label to be bold maroon serif, text to be plain serif
+\newcommand{\highlight}[1]{\textbf{\textcolor{UMNMaroon}{#1}}}
 
 %-----------------------------------------------------------
 % Define the column width and poster size
@@ -150,12 +151,34 @@
 			\begin{block}{Introduction}
 				\begin{itemize}
 					\item Accurate pitch perception is possible for harmonic complex tones (HCTs) even when all components are beyond putative limits of phase locking \autocite{Lau2017a, Gockel2018}
-			\item Accurate pitch perception is possible for target HCTs presented concurrently with spectrally overlapping masker HCTs \autocite{Carlyon1996, Micheyl2010a, Wang2012, Micheyl2006}
+					\item Accurate pitch perception is possible for target HCTs presented concurrently with spectrally overlapping masker HCTs \autocite{Carlyon1996, Micheyl2010a, Wang2012, Micheyl2006}
+					\item However, it is unknown whether accurate pitch perception is possible for mixtures of HCTs with resolved harmonics beyond the limits of phase locking
+				\end{itemize}
+			\end{block}
+			\begin{block}{Methods}
+				\begin{itemize}
+					\item Examined pitch perception of complex tones with low (280 Hz) or high (1400 Hz) nominal F0s
+					\item \highlight{Experiment 1}
+						\begin{itemize}
+							\item Measured F0 difference limens (F0DLs)
+							\item \textit{Experiment 1a}
+							\item \textit{Experiment 1b}
+						\end{itemize}
+					\item \highlight{Experiment 2}
+						\begin{itemize}
+							\item Measured percent correct for fixed interval size
+						\end{itemize}
+					\item \highlight{Experiment 3}
+						\begin{itemize}
+							\item Measured target-to-masker ratio (TMR) required for fixed performance and fixed interval size
+						\end{itemize}
 				\end{itemize}
 			\end{block}
 		\end{column} % Column 1 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
+			\begin{block}{Stimuli}
+			\end{block}
 		\end{column} % Column 2/3 <End>
 		\begin{column}{\sepwid} \end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 4 <Begin>
