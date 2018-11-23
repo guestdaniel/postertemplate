@@ -8,13 +8,12 @@
 
 % You may not need everything below --- these are just personal preferences and/or commonly used packages
 \documentclass[capfont, final]{beamer}
-\usepackage[scale=1.25]{beamerposter}
+\usepackage[scale=1]{beamerposter}
 \usepackage{tabularx} % Better tables
 \usepackage{float} % Floats, obviously
 \usepackage{booktabs} % Better tables
 \usepackage{amsmath} % Better tables
 \usepackage{hyperref} % URLs
-\usepackage[neverdecrease]{paralist} % Control over list indentation
 \usepackage[english]{babel} % English language 
 \setbeamertemplate{caption}[numbered] % Add numbers to captions
 \usepackage{caption} % Modify caption settings below...
@@ -47,8 +46,6 @@
 \setlength{\threecolwid}{0.708\paperwidth}
 \setlength{\topmargin}{-0.5in}
 \usetheme{confposter}
-\usepackage{exscale}
-\setdefaultleftmargin{1cm}{2cm}{}{}{}{} % Set indentation levels for itemize/enumerate
 
 %-----------------------------------------------------------
 % Set main colors (overwrites defaults in beamerthemeconfposter.sty
@@ -75,16 +72,16 @@
 %-----------------------------------------------------------
 
 \usepackage[backend=biber,
-		    style=authoryear]{biblatex}
-\bibliography{bibliography} 
+		    style=numeric]{biblatex}
+\bibliography{~/lit/bibliography.bib} 
 
 %-----------------------------------------------------------
 % Name and authors
 %-----------------------------------------------------------
 
-\title{A title}
-\author{An Author}
-\institute{University of Somewhere, Department of Something, Some Lab}
+\title{Pitch perception of concurrent high-frequency complex tones}
+\author{Daniel Guest, Andrew Oxenham}
+\institute{University of Minnesota, Department of Psychology, Auditory Perception and Cognition Lab}
 
 %-----------------------------------------------------------
 % Start the poster
@@ -105,12 +102,21 @@ options(digits=2)
 	\begin{columns}[T] % Overall <Begin>
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 1 <Begin>
+			\begin{block}{Introduction}
+				\begin{itemize}
+					\item Accurate pitch perception is possible for harmonic complex tones (HCTs) even when all components are beyond putative limits of phase locking \autocite{Lau2017a, Gockel2018}
+					\item Accurate pitch perception is possible for target HCTs presented concurrently with spectrally overlapping masker HCTs \autocite{Carlyon1996, Micheyl2010a, Wang2012, Micheyl2006}
+				\end{itemize}
+			\end{block}
 		\end{column} % Column 1 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
 		\begin{column}{\twocolwid} % Column 2/3 <Begin>
 		\end{column} % Column 2/3 <End>
 		\begin{column}{\sepwid} \end{column} % Spacer column
 		\begin{column}{\onecolwid} % Column 4 <Begin>
+			\begin{block}{Bibliography}
+				\printbibliography
+			\end{block}
 		\end{column} % Column 4 <End>
 		\begin{column}{\sepwid}\end{column} % Spacer column
 	\end{columns} % Overall <End>
